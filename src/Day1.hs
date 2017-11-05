@@ -1,9 +1,14 @@
-module Day1 (getShortestPath) where
-  data Pole = North | South | West | East deriving Show
+module Day1 (parseInput) where
+
+  import Data.List.Split
+
+  data Pole = North | South | West | East | Center deriving Show
 
   data Point = Point Integer Integer deriving Show
 
   data Direction = Direction Point Pole deriving Show
 
-  getShortestPath :: String -> Int
-  getShortestPath directions = 0
+  parseInput :: String -> [String]
+  parseInput directions =
+    splitOn "," directions
+    
