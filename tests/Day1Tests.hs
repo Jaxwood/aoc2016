@@ -1,6 +1,7 @@
 module Day1Tests where
+
   import Test.HUnit
-  import Day1 (parseInput, toMove, moveList, Move(R, L) )
+  import Day1 (parseInput, toMove, moveList, Move(R, L))
 
   day1 :: Test
   day1 = test [
