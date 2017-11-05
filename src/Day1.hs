@@ -1,6 +1,7 @@
 module Day1 (parseInput) where
 
   import Data.List.Split
+  import qualified Data.Text as T
 
   data Pole = North | South | West | East | Center deriving Show
 
@@ -10,5 +11,5 @@ module Day1 (parseInput) where
 
   parseInput :: String -> [String]
   parseInput directions =
-    splitOn "," directions
+    map (T.unpack . T.strip . T.pack) $ splitOn "," directions
     
