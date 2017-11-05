@@ -1,4 +1,4 @@
-module Day1 (parseInput, toMove, moveList, Move(R, L)) where
+module Day1 (parseInput, move, moves, Move(R, L)) where
 
   import Data.List.Split
   import qualified Data.Text as T
@@ -8,11 +8,11 @@ module Day1 (parseInput, toMove, moveList, Move(R, L)) where
   parseInput :: String -> [String]
   parseInput = map trim . splitOn ","
   
-  moveList :: String -> [Move]
-  moveList = map toMove . parseInput
+  moves :: String -> [Move]
+  moves = map move . parseInput
 
-  toMove :: String -> Move
-  toMove move@(x:xs) 
+  move :: String -> Move
+  move m@(x:xs) 
     | x == 'R' = R (read xs)
     | otherwise = L (read xs)
     
