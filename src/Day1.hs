@@ -11,5 +11,9 @@ module Day1 (parseInput) where
 
   parseInput :: String -> [String]
   parseInput directions =
-    map (T.unpack . T.strip . T.pack) $ splitOn "," directions
+    map trim $ splitOn "," directions
+
+  trim :: (String -> String)
+  trim =
+    T.unpack . T.strip . T.pack
     
