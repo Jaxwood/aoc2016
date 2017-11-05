@@ -1,5 +1,5 @@
-# Revision history for adventofcode2017
+# Revision history for adventofcode2016
 
-## 0.1.0.0  -- YYYY-mm-dd
+## 0.1.0.0  -- 2017-11-01
 
-* First version. Released on an unsuspecting world.
+* First version.
