@@ -1,12 +1,12 @@
 module Main (main) where
   import System.Exit
   import Test.HUnit
-  import ParseTests
+  import Day1Tests
 
   main :: IO ()
   main = do
     counts2 <- runTestTT (test [
-             parseTest 
+             day1 
             ])
 
     if (errors counts2 + failures counts2 == 0)
