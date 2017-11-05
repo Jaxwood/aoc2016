@@ -19,7 +19,10 @@ library
   exposed-modules:     Day1
   -- other-modules:       
   -- other-extensions:    
-  build-depends:       base >=4.9 && <4.10
+  build-depends:       
+    base >=4.9 && <4.10,
+    HUnit,
+    split
   hs-source-dirs:      src
   default-language:    Haskell2010
 
@@ -29,4 +32,5 @@ test-suite tests
   hs-source-dirs: tests, src
   build-depends:
     base >= 4.9,
-    HUnit
+    HUnit,
+    split
