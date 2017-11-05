@@ -6,8 +6,7 @@ module Day1 (parseInput, toMove, moveList, Move(R, L)) where
   data Move = R Int | L Int deriving (Eq, Show)
 
   parseInput :: String -> [String]
-  parseInput directions =
-    map trim $ splitOn "," directions
+  parseInput = map trim . splitOn ","
   
   moveList :: String -> [Move]
   moveList = map toMove . parseInput
