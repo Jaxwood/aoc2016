@@ -1,4 +1,4 @@
-module Day1 (parseInput, move, moves, Move(R, L)) where
+module Day1 (result) where
 
   import Data.List.Split
   import qualified Data.Text as T
