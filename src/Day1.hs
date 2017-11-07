@@ -3,7 +3,7 @@ module Day1 (result) where
   import Data.List.Split
   import qualified Data.Text as T
 
-  data Move = R Int | L Int deriving (Eq, Show)
+  data Move = R Int | L Int
   data Position = Position Int Int
   data Pole = North | South | East | West | Unknown
   data Coord = Coord Position Pole
@@ -19,37 +19,37 @@ module Day1 (result) where
   calculate xs = foldl acc (Coord (Position 0 0) Unknown) xs
 
   acc :: Coord -> Move -> Coord
-  acc (Coord (Position 0 0) _) move@(L a) =
+  acc (Coord (Position 0 0) _) (L a) =
     Coord (Position (0-a) 0) West
 
-  acc (Coord (Position 0 0) _) move@(R a) =
+  acc (Coord (Position 0 0) _) (R a) =
     Coord (Position a 0) East
 
-  acc (Coord (Position x y) North) move@(L a) =
+  acc (Coord (Position x y) North) (L a) =
     Coord (Position (x-a) y) West
 
-  acc (Coord (Position x y) North) move@(R a) =
+  acc (Coord (Position x y) North) (R a) =
     Coord (Position (x+a) y) East
 
-  acc (Coord (Position x y) South) move@(L a) =
+  acc (Coord (Position x y) South) (L a) =
     Coord (Position (x+a) y) East
 
-  acc (Coord (Position x y) South) move@(R a) =
+  acc (Coord (Position x y) South) (R a) =
     Coord (Position (x-a) y) West
 
-  acc (Coord (Position x y) East) move@(R a) =
+  acc (Coord (Position x y) East) (R a) =
     Coord (Position x (y-a)) South
 
-  acc (Coord (Position x y) East) move@(L a) =
+  acc (Coord (Position x y) East) (L a) =
     Coord (Position x (y+a)) North
 
-  acc (Coord (Position x y) West) move@(R a) =
+  acc (Coord (Position x y) West) (R a) =
     Coord (Position x (y+a)) North
 
-  acc (Coord (Position x y) West) move@(L a) =
+  acc (Coord (Position x y) West) (L a) =
     Coord (Position x (y-a)) South
 
-  acc (Coord (Position x y) _) move =
+  acc (Coord (Position x y) _) _ =
     Coord (Position 0 0) Unknown
 
   moves :: String -> [Move]
