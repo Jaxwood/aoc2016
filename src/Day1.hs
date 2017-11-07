@@ -1,4 +1,4 @@
-module Day1 (result) where
+module Day1 (resulta, resultb) where
 
   import Data.List.Split
   import qualified Data.Text as T
@@ -8,8 +8,11 @@ module Day1 (result) where
   data Pole = North | South | East | West | Unknown
   data Coord = Coord Position Pole
 
-  result :: String -> Int
-  result = blocks . calculate . moves
+  resultb :: String -> Int
+  resultb str = 0
+
+  resulta :: String -> Int
+  resulta = blocks . calculate . moves
 
   blocks :: Coord -> Int
   blocks (Coord (Position x y) _) =
