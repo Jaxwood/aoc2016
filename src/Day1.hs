@@ -32,7 +32,7 @@ module Day1 (result) where
     Coord (Position (x+a) y) East
 
   acc (Coord (Position x y) South) move@(L a) =
-    Coord (Position (x+0) y) East
+    Coord (Position (x+a) y) East
 
   acc (Coord (Position x y) South) move@(R a) =
     Coord (Position (x-a) y) West
