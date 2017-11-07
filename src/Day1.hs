@@ -5,21 +5,52 @@ module Day1 (result) where
 
   data Move = R Int | L Int deriving (Eq, Show)
   data Position = Position Int Int
-  data Coord = Coord Position Move
+  data Pole = North | South | East | West | Unknown
+  data Coord = Coord Position Pole
 
   result :: String -> Int
   result = blocks . calculate . moves
 
   blocks :: Coord -> Int
   blocks (Coord (Position x y) _) =
-    x + y
+    (abs x) + (abs y)
   
   calculate :: [Move] -> Coord
-  calculate (x:xs) = foldl acc (Coord (Position 0 0) x) xs
+  calculate xs = foldl acc (Coord (Position 0 0) Unknown) xs
 
   acc :: Coord -> Move -> Coord
-  acc coord move =
-    Coord (Position 0 0) move
+  acc (Coord (Position 0 0) _) move@(L a) =
+    Coord (Position (0-a) 0) West
+
+  acc (Coord (Position 0 0) _) move@(R a) =
+    Coord (Position a 0) East
+
+  acc (Coord (Position x y) North) move@(L a) =
+    Coord (Position (x-a) y) West
+
+  acc (Coord (Position x y) North) move@(R a) =
+    Coord (Position (x+a) y) East
+
+  acc (Coord (Position x y) South) move@(L a) =
+    Coord (Position (x+0) y) East
+
+  acc (Coord (Position x y) South) move@(R a) =
+    Coord (Position (x-a) y) West
+
+  acc (Coord (Position x y) East) move@(R a) =
+    Coord (Position x (y-a)) South
+
+  acc (Coord (Position x y) East) move@(L a) =
+    Coord (Position x (y+a)) North
+
+  acc (Coord (Position x y) West) move@(R a) =
+    Coord (Position x (y+a)) North
+
+  acc (Coord (Position x y) West) move@(L a) =
+    Coord (Position x (y-a)) South
+
+  acc (Coord (Position x y) _) move =
+    Coord (Position 0 0) Unknown
 
   moves :: String -> [Move]
   moves = map move . parseInput
