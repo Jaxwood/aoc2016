@@ -8,16 +8,21 @@ module Day1 (resulta, resultb) where
   data Pole = North | South | East | West | Unknown
   data Coord = Coord Position Pole
 
-  resultb :: String -> Int
-  resultb str = 0
-
   resulta :: String -> Int
   resulta = blocks . calculate . moves
+
+  resultb :: String -> Int
+  resultb str = 0
 
   blocks :: Coord -> Int
   blocks (Coord (Position x y) _) =
     (abs x) + (abs y)
   
+  path :: Position -> Position -> [(Int, Int)]
+  path (Position x y) (Position x' y') 
+    | x == x' = map (\y'' -> (x, y'')) [y..y']
+    | otherwise = map (\x'' -> (x'', y)) [x..x']
+
   calculate :: [Move] -> Coord
   calculate = foldl acc (Coord (Position 0 0) Unknown)
 
