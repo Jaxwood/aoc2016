@@ -19,7 +19,7 @@ module Day1 (resulta, resultb) where
     (abs x) + (abs y)
   
   calculate :: [Move] -> Coord
-  calculate = foldl acc (Coord (Position 0 0) North)
+  calculate = foldl acc (Coord (Position 0 0) Unknown)
 
   acc :: Coord -> Move -> Coord
   acc (Coord (Position _ _) Unknown) (L a) =
