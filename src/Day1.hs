@@ -5,7 +5,7 @@ module Day1 (resulta, resultb) where
 
   data Move = R Int | L Int
   data Position = Position Int Int
-  data Pole = North | South | East | West | Unknown
+  data Pole = North | South | East | West
   data Coord = Coord Position Pole
 
   resultb :: String -> Int
@@ -19,7 +19,7 @@ module Day1 (resulta, resultb) where
     (abs x) + (abs y)
   
   calculate :: [Move] -> Coord
-  calculate xs = foldl acc (Coord (Position 0 0) Unknown) xs
+  calculate xs = foldl acc (Coord (Position 0 0) North) xs
 
   acc :: Coord -> Move -> Coord
   acc (Coord (Position 0 0) _) (L a) =
@@ -51,9 +51,6 @@ module Day1 (resulta, resultb) where
 
   acc (Coord (Position x y) West) (L a) =
     Coord (Position x (y-a)) South
-
-  acc (Coord (Position x y) _) _ =
-    Coord (Position 0 0) Unknown
 
   moves :: String -> [Move]
   moves = map move . parseInput
