@@ -9,7 +9,7 @@ module Day1 (resulta, resultb) where
   data Coord = Coord Position Pole
 
   resulta :: String -> Int
-  resulta = blocks . calculate . moves
+  resulta = blocks . head . calculate . moves
 
   resultb :: String -> Int
   resultb str = 0
@@ -23,39 +23,42 @@ module Day1 (resulta, resultb) where
     | x == x' = map (\y'' -> (x, y'')) [y..y']
     | otherwise = map (\x'' -> (x'', y)) [x..x']
 
-  calculate :: [Move] -> Coord
-  calculate = foldl acc (Coord (Position 0 0) Unknown)
+  calculate :: [Move] -> [Coord]
+  calculate = foldl acc [(Coord (Position 0 0) Unknown)]
 
-  acc :: Coord -> Move -> Coord
-  acc (Coord (Position _ _) Unknown) (L a) =
-    Coord (Position (0-a) 0) West
+  acc :: [Coord] -> Move -> [Coord]
+  acc [] _ =
+    []
 
-  acc (Coord (Position _ _) Unknown) (R a) =
-    Coord (Position a 0) East
+  acc ((Coord (Position _ _) Unknown):xs) (L a) =
+    (Coord (Position (0-a) 0) West):xs
 
-  acc (Coord (Position x y) North) (L a) =
-    Coord (Position (x-a) y) West
+  acc ((Coord (Position _ _) Unknown):xs) (R a) =
+    (Coord (Position a 0) East):xs
 
-  acc (Coord (Position x y) North) (R a) =
-    Coord (Position (x+a) y) East
+  acc ((Coord (Position x y) North):xs) (L a) =
+    (Coord (Position (x-a) y) West):xs
 
-  acc (Coord (Position x y) South) (L a) =
-    Coord (Position (x+a) y) East
+  acc ((Coord (Position x y) North):xs) (R a) =
+    (Coord (Position (x+a) y) East):xs
 
-  acc (Coord (Position x y) South) (R a) =
-    Coord (Position (x-a) y) West
+  acc ((Coord (Position x y) South):xs) (L a) =
+    (Coord (Position (x+a) y) East):xs
 
-  acc (Coord (Position x y) East) (R a) =
-    Coord (Position x (y-a)) South
+  acc ((Coord (Position x y) South):xs) (R a) =
+    (Coord (Position (x-a) y) West):xs
 
-  acc (Coord (Position x y) East) (L a) =
-    Coord (Position x (y+a)) North
+  acc ((Coord (Position x y) East):xs) (R a) =
+    (Coord (Position x (y-a)) South):xs
 
-  acc (Coord (Position x y) West) (R a) =
-    Coord (Position x (y+a)) North
+  acc ((Coord (Position x y) East):xs) (L a) =
+    (Coord (Position x (y+a)) North):xs
 
-  acc (Coord (Position x y) West) (L a) =
-    Coord (Position x (y-a)) South
+  acc ((Coord (Position x y) West):xs)(R a) =
+    (Coord (Position x (y+a)) North):xs
+
+  acc ((Coord (Position x y) West):xs) (L a) =
+    (Coord (Position x (y-a)) South):xs
 
   moves :: String -> [Move]
   moves = map move . parseInput
