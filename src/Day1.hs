@@ -33,29 +33,29 @@ module Day1 (resulta, resultb) where
   acc [] (R a) =
     [(Coord (Position a 0) East)]
 
-  acc ((Coord (Position x y) North):xs) (L a) =
-    (Coord (Position (x-a) y) West):xs
+  acc lst@((Coord (Position x y) North):xs) (L a) =
+    (Coord (Position (x-a) y) West):lst
 
-  acc ((Coord (Position x y) North):xs) (R a) =
-    (Coord (Position (x+a) y) East):xs
+  acc lst@((Coord (Position x y) North):xs) (R a) =
+    (Coord (Position (x+a) y) East):lst
 
-  acc ((Coord (Position x y) South):xs) (L a) =
-    (Coord (Position (x+a) y) East):xs
+  acc lst@((Coord (Position x y) South):xs) (L a) =
+    (Coord (Position (x+a) y) East):lst
 
-  acc ((Coord (Position x y) South):xs) (R a) =
-    (Coord (Position (x-a) y) West):xs
+  acc lst@((Coord (Position x y) South):xs) (R a) =
+    (Coord (Position (x-a) y) West):lst
 
-  acc ((Coord (Position x y) East):xs) (R a) =
-    (Coord (Position x (y-a)) South):xs
+  acc lst@((Coord (Position x y) East):xs) (R a) =
+    (Coord (Position x (y-a)) South):lst
 
-  acc ((Coord (Position x y) East):xs) (L a) =
-    (Coord (Position x (y+a)) North):xs
+  acc lst@((Coord (Position x y) East):xs) (L a) =
+    (Coord (Position x (y+a)) North):lst
 
-  acc ((Coord (Position x y) West):xs)(R a) =
-    (Coord (Position x (y+a)) North):xs
+  acc lst@((Coord (Position x y) West):xs)(R a) =
+    (Coord (Position x (y+a)) North):lst
 
-  acc ((Coord (Position x y) West):xs) (L a) =
-    (Coord (Position x (y-a)) South):xs
+  acc lst@((Coord (Position x y) West):xs) (L a) =
+    (Coord (Position x (y-a)) South):lst
 
   moves :: String -> [Move]
   moves = map move . parseInput
