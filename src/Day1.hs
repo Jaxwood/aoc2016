@@ -1,5 +1,7 @@
 module Day1 (resulta, resultb) where
 
+  import Data.Maybe
+  import Data.List
   import Data.List.Split
   import qualified Data.Text as T
 
@@ -12,16 +14,34 @@ module Day1 (resulta, resultb) where
   resulta = blocks . head . calculate . moves
 
   resultb :: String -> Int
-  resultb str = 0
+  resultb = blocks' . fromJust . contains . concatMap path . pairs . reverse . calculate . moves
 
   blocks :: Coord -> Int
   blocks (Coord (Position x y) _) =
     (abs x) + (abs y)
+
+  blocks' :: (Int, Int) -> Int
+  blocks' (x, y) =
+    (abs x) + (abs y)
   
-  path :: Position -> Position -> [(Int, Int)]
-  path (Position x y) (Position x' y') 
-    | x == x' = map (\y'' -> (x, y'')) [y..y']
-    | otherwise = map (\x'' -> (x'', y)) [x..x']
+  contains :: [(Int, Int)] -> Maybe (Int, Int)
+  contains (x:tail)
+    | elem x tail == False = contains tail
+    | elem x tail == True = Just x
+
+  generate :: (Int -> Int) -> (Int -> Bool) -> Int -> [Int]
+  generate f p n =
+      takeWhile p $ iterate f n
+  
+  path :: (Coord, Coord) -> [(Int, Int)]
+  path ((Coord (Position x y) _), (Coord (Position x' y')  _))
+    | x == x' && y > y' = zip (repeat x) $ generate pred (>y') y
+    | x == x' && y < y' = zip (repeat x) $ generate succ (<y') y
+    | y == y' && x > x' = zip (generate pred (>x') x) $ repeat y
+    | otherwise = zip (generate succ (<x') x) $ repeat y
+
+  pairs :: [Coord] -> [(Coord, Coord)]
+  pairs p = zip ((Coord (Position 0 0) West):p) p
 
   calculate :: [Move] -> [Coord]
   calculate = foldl acc []
