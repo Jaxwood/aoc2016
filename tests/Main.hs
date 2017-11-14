@@ -8,6 +8,7 @@ module Main (main) where
   main :: IO ()
   main = do
     day3a <- readFile "c:\\code\\private\\adventofcode2016\\tests\\Day3.csv"
+
     counts2 <- runTestTT (test [
              day1,
              day2,
