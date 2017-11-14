@@ -4,10 +4,13 @@ module Day3 (resulta, resultb) where
   import Data.List
 
   resulta :: String -> Int
-  resulta = length . filter (isValid . toMax) . rows
+  resulta =  filterByValid . rows
 
   resultb :: String -> Int
-  resultb = length . filter (isValid . toMax) . columns
+  resultb = filterByValid . columns
+
+  filterByValid :: [[Int]] -> Int
+  filterByValid = length . filter (isValid . toMax)
 
   isValid :: (Int, Int) -> Bool
   isValid a = fst a > snd a
@@ -18,7 +21,7 @@ module Day3 (resulta, resultb) where
     ((sum xs) - m, m)
 
   columns :: String -> [[Int]]
-  columns = chunksOf 3 . concat . transpose . map (map read . words) . lines
+  columns = chunksOf 3 . concat . transpose . rows
 
   rows :: String -> [[Int]]
   rows = map (map read . words) . lines
