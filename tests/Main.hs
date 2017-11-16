@@ -1,5 +1,6 @@
 module Main (main) where
   import System.Exit
+  import System.Directory
   import Test.HUnit
   import Day1Tests
   import Day2Tests
@@ -8,8 +9,9 @@ module Main (main) where
 
   main :: IO ()
   main = do
-    day3a <- readFile "c:\\code\\private\\adventofcode2016\\tests\\Day3.csv"
-    day4a <- readFile "c:\\code\\private\\adventofcode2016\\tests\\Day4.csv"
+    dir <- getCurrentDirectory 
+    day3a <- readFile (dir ++ "/tests/Day3.csv")
+    day4a <- readFile (dir ++ "/tests/Day4.csv")
 
     counts2 <- runTestTT (test [
              day1,
