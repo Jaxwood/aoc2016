@@ -1,12 +1,6 @@
-module Day4 (resulta, resultb, parseInput) where
+module Day4 (resulta, resultb, parseName, parseSector, parseChecksum) where
   
   import qualified Text.Parsec as Parsec
-
-  type Sector = Int
-  type Checksum = String
-  type Name = String
-
-  data Room = Room Name Sector Checksum 
 
   resulta :: String -> Int
   resulta str = 0
@@ -14,12 +8,14 @@ module Day4 (resulta, resultb, parseInput) where
   resultb :: String -> Int
   resultb str = 0
 
-  parse :: String -> Either Parsec.ParseError [Char]
-  parse str =
-    Parsec.parse (Parsec.many (Parsec.char 'h')) "" "hhhheeelllooo!"
+  parseName :: String -> Either Parsec.ParseError String
+  parseName = Parsec.parse (Parsec.endBy Parsec.letter (Parsec.char '-')) ""
 
-  parseInput :: String -> (String, Int, String)
-  parseInput str = ("",0,"")
+  parseSector :: String -> Either Parsec.ParseError String
+  parseSector = Parsec.parse (Parsec.many Parsec.digit) ""
 
-  -- totally-real-room-200[decoy]
-  -- a-b-c-d-e-f-g-h-987[abcde]
+  parseChecksum :: String -> Either Parsec.ParseError String
+  parseChecksum = do
+    _ <- Parsec.parse (Parsec.char '[') ""
+    checksum <- Parsec.parse (Parsec.many1 Parsec.letter) ""
+    return checksum
