@@ -4,6 +4,6 @@ module Day4Tests where
 
   day4 :: String -> Test
   day4 day4a = test [
-      assertEqual "day4a" 0 (resulta day4a),
+      assertEqual "day4a" 1514 (resulta day4a),
       assertEqual "day4b" 0 (resultb day4a) 
     ]
