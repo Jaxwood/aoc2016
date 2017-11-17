@@ -1,4 +1,4 @@
-module Day4 (resulta, resultb, parseInputResult, Room(Room) ) where
+module Day4 (resulta, resultb) where
   
   import Text.Parsec
   import Text.Parsec.String
@@ -19,8 +19,8 @@ module Day4 (resulta, resultb, parseInputResult, Room(Room) ) where
 
   parseInput :: Parser Room
   parseInput = do
-    name <- endBy letter (char '-')
+    name <- endBy (many letter) (char '-')
     sector <- many digit
     _ <- char '['
     checksum <- many1 letter
-    return $ Room name (read sector) checksum
+    return $ Room (concat name) (read sector) checksum
