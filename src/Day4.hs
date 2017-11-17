@@ -1,5 +1,6 @@
-module Day4 (resulta, resultb) where
+module Day4 (resulta, resultb, isValid) where
   
+  import Data.List
   import Text.Parsec
   import Text.Parsec.String
 
@@ -14,8 +15,18 @@ module Day4 (resulta, resultb) where
   resultb :: String -> Int
   resultb str = 0
 
+  isValid :: String -> String -> Bool
+  isValid candidate checksum =
+    True
+
   parseInputResult :: String -> Either ParseError Room
   parseInputResult = parse parseInput ""
+
+  sortGT :: (String, Int) -> (String, Int) -> Ordering
+  sortGT (a1, b1) (a2, b2)
+    | b1 < b2 = GT
+    | b1 > b2 = LT
+    | b1 == b2 = compare a1 a2
 
   parseInput :: Parser Room
   parseInput = do
