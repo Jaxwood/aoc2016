@@ -1,6 +1,12 @@
-module Day4 (resulta, resultb, parseName, parseSector, parseChecksum) where
+module Day4 (resulta, resultb, parseInputResult, Room(Room) ) where
   
-  import qualified Text.Parsec as Parsec
+  import Text.Parsec
+  import Text.Parsec.String
+
+  type Name = String
+  type Sector = Int
+  type Checksum = String
+  data Room = Room Name Sector Checksum deriving (Eq, Show)
 
   resulta :: String -> Int
   resulta str = 0
@@ -8,14 +14,13 @@ module Day4 (resulta, resultb, parseName, parseSector, parseChecksum) where
   resultb :: String -> Int
   resultb str = 0
 
-  parseName :: String -> Either Parsec.ParseError String
-  parseName = Parsec.parse (Parsec.endBy Parsec.letter (Parsec.char '-')) ""
+  parseInputResult :: String -> Either ParseError Room
+  parseInputResult = parse parseInput ""
 
-  parseSector :: String -> Either Parsec.ParseError String
-  parseSector = Parsec.parse (Parsec.many Parsec.digit) ""
-
-  parseChecksum :: String -> Either Parsec.ParseError String
-  parseChecksum = do
-    _ <- Parsec.parse (Parsec.char '[') ""
-    checksum <- Parsec.parse (Parsec.many1 Parsec.letter) ""
-    return checksum
+  parseInput :: Parser Room
+  parseInput = do
+    name <- endBy letter (char '-')
+    sector <- many digit
+    _ <- char '['
+    checksum <- many1 letter
+    return $ Room name (read sector) checksum
