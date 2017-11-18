@@ -20,14 +20,12 @@ module Day4 (resulta, resultb, calculate, Room(Room), isValid, sumRooms) where
   sumRooms = foldl (\acc (Room a b c) -> b + acc) 0 . filter isValid . rights
 
   isValid :: Room -> Bool
-  isValid r = 
-    let (Room a _ c) = calculate r
+  isValid r@(Room _ _ c) = 
+    let a = calculate r
     in a == c
 
-  calculate :: Room -> Room
-  calculate (Room n s c) =
-    let a = take 5 . map head . map fst . sortBy sortGT . map (\x -> (x, length x)) . group . sort $ n
-      in (Room a s c)
+  calculate :: Room -> String
+  calculate (Room n _ _) = take 5 . map (head . fst) . sortBy sortGT . map (\x -> (x, length x)) . group . sort $ n
 
   parseInput :: String -> Either ParseError Room
   parseInput = parse match ""
