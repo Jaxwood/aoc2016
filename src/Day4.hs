@@ -17,11 +17,12 @@ module Day4 (resulta, resultb, calculate, Room(Room), isValid, sumRooms) where
   resultb str = 0
 
   sumRooms :: [Either ParseError Room] -> Int
-  sumRooms = foldl (\acc (Room a b c) -> b + acc) 0 . filter isValid . map calculate . rights
+  sumRooms = foldl (\acc (Room a b c) -> b + acc) 0 . filter isValid . rights
 
   isValid :: Room -> Bool
-  isValid (Room n _ c) =
-    n == c
+  isValid r = 
+    let (Room a _ c) = calculate r
+    in a == c
 
   calculate :: Room -> Room
   calculate (Room n s c) =
