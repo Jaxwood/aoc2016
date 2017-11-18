@@ -1,4 +1,4 @@
-module Day4 (resulta, resultb, isValid) where
+module Day4 (resulta, resultb) where
   
   import Data.List
   import Text.Parsec
@@ -10,14 +10,15 @@ module Day4 (resulta, resultb, isValid) where
   data Room = Room Name Sector Checksum deriving (Eq, Show)
 
   resulta :: String -> Int
-  resulta str = 0
+  resulta str = 0 -- foldl (\(Room _ s _) a -> s+a) 0 . filter (\(Room a _ c) -> a == c) rcalculate . parseInput
 
   resultb :: String -> Int
   resultb str = 0
 
-  isValid :: String -> String -> Bool
-  isValid candidate checksum =
-    True
+  calculate :: Room -> Room
+  calculate (Room n s c) =
+    let a = (Room Name a s c) in
+      take 5 . map head . map fst . sortBy sortGT . map (\x -> (x, length x)) . group . sort $ n
 
   parseInputResult :: String -> Either ParseError Room
   parseInputResult = parse parseInput ""
