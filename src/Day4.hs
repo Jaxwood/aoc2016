@@ -1,4 +1,4 @@
-module Day4 (resulta, resultb, calculate, Room(Room), isValid, sumRooms) where
+module Day4 (resulta, resultb) where
   
   import Data.List
   import Data.Either (rights)
