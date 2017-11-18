@@ -17,7 +17,7 @@ module Day4 (resulta, resultb) where
 
   calculate :: Room -> Room
   calculate (Room n s c) =
-    let a = (Room Name a s c) in
+    let a = (Room a s c) in
       take 5 . map head . map fst . sortBy sortGT . map (\x -> (x, length x)) . group . sort $ n
 
   parseInputResult :: String -> Either ParseError Room
