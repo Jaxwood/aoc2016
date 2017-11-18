@@ -11,7 +11,7 @@ module Day4 (resulta, resultb, calculate, Room(Room), isValid, sumRooms) where
   data Room = Room Name Sector Checksum deriving (Eq, Show)
 
   resulta :: String -> Int
-  resulta = sumRooms . map (parseInput) . lines
+  resulta = sumRooms . map (parse match "") . lines
 
   resultb :: String -> Int
   resultb str = 0
@@ -26,9 +26,6 @@ module Day4 (resulta, resultb, calculate, Room(Room), isValid, sumRooms) where
 
   calculate :: Room -> String
   calculate (Room n _ _) = take 5 . map (head . fst) . sortBy sortGT . map (\x -> (x, length x)) . group . sort $ n
-
-  parseInput :: String -> Either ParseError Room
-  parseInput = parse match ""
 
   sortGT :: (String, Int) -> (String, Int) -> Ordering
   sortGT (a1, b1) (a2, b2)
