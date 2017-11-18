@@ -40,3 +40,9 @@ module Day4 (resulta, resultb) where
     _ <- char '['
     checksum <- many1 letter
     return $ Room (concat name) (read sector) checksum
+
+  next :: Char -> Char
+  next ' ' = ' '
+  next '-' = ' '
+  next 'z' = 'a'
+  next c = succ c 
