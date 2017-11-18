@@ -13,11 +13,15 @@ module Day4 (resulta, resultb) where
   resulta :: String -> Int
   resulta = sumRooms . map (parse match "") . lines
 
-  resultb :: String -> Int
-  resultb str = 0
+  resultb :: String -> String
+  resultb = decipher . fromRight . (parse matchb "")
 
   sumRooms :: [Either ParseError Room] -> Int
   sumRooms = foldl (\acc (Room a b c) -> b + acc) 0 . filter isValid . rights
+
+  fromRight :: Either a b -> b
+  fromRight (Right r) = r
+  fromRight (Left e) = error "parse error"
 
   isValid :: Room -> Bool
   isValid r@(Room _ _ c) = 
@@ -40,6 +44,21 @@ module Day4 (resulta, resultb) where
     _ <- char '['
     checksum <- many1 letter
     return $ Room (concat name) (read sector) checksum
+
+  matchb :: Parser Room
+  matchb = do
+    name <- manyTill anyToken (lookAhead digit)
+    sector <- many digit
+    _ <- char '['
+    checksum <- many1 letter
+    return $ Room (init name) (read sector) checksum
+
+  decipher :: Room -> String
+  decipher (Room cipher code _) =
+    map (decrypt (code+1)) cipher
+
+  decrypt :: Int -> Char -> Char
+  decrypt i c = head . reverse . take i $ (iterate next c)
 
   next :: Char -> Char
   next ' ' = ' '
