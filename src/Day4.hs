@@ -1,6 +1,7 @@
-module Day4 (resulta, resultb) where
+module Day4 (resulta, resultb, calculate, Room(Room), isValid, sumRooms) where
   
   import Data.List
+  import Data.Either (rights)
   import Text.Parsec
   import Text.Parsec.String
 
@@ -10,18 +11,25 @@ module Day4 (resulta, resultb) where
   data Room = Room Name Sector Checksum deriving (Eq, Show)
 
   resulta :: String -> Int
-  resulta str = 0 -- foldl (\(Room _ s _) a -> s+a) 0 . filter (\(Room a _ c) -> a == c) rcalculate . parseInput
+  resulta = sumRooms . map (parseInput) . lines
 
   resultb :: String -> Int
   resultb str = 0
 
+  sumRooms :: [Either ParseError Room] -> Int
+  sumRooms = foldl (\acc (Room a b c) -> b + acc) 0 . filter isValid . map calculate . rights
+
+  isValid :: Room -> Bool
+  isValid (Room n _ c) =
+    n == c
+
   calculate :: Room -> Room
   calculate (Room n s c) =
-    let a = (Room a s c) in
-      take 5 . map head . map fst . sortBy sortGT . map (\x -> (x, length x)) . group . sort $ n
+    let a = take 5 . map head . map fst . sortBy sortGT . map (\x -> (x, length x)) . group . sort $ n
+      in (Room a s c)
 
-  parseInputResult :: String -> Either ParseError Room
-  parseInputResult = parse parseInput ""
+  parseInput :: String -> Either ParseError Room
+  parseInput = parse match ""
 
   sortGT :: (String, Int) -> (String, Int) -> Ordering
   sortGT (a1, b1) (a2, b2)
@@ -29,8 +37,8 @@ module Day4 (resulta, resultb) where
     | b1 > b2 = LT
     | b1 == b2 = compare a1 a2
 
-  parseInput :: Parser Room
-  parseInput = do
+  match :: Parser Room
+  match = do
     name <- endBy (many letter) (char '-')
     sector <- many digit
     _ <- char '['
