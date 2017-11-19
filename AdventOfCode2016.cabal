@@ -25,7 +25,9 @@ library
     split,
     text,
     directory,
-    parsec
+    parsec,
+    cryptohash,
+    bytestring
   hs-source-dirs:      src
   default-language:    Haskell2010
 
@@ -39,4 +41,6 @@ test-suite tests
     split,
     text,
     directory,
-    parsec
+    parsec,
+    cryptohash,
+    bytestring
