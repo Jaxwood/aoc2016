@@ -1,5 +1,7 @@
 module Day5 (resulta, resultb) where
 
+  import Data.Char
+  import Data.Function
   import Data.List
   import Data.Maybe
   import qualified Data.ByteString.Char8 as C
@@ -9,7 +11,7 @@ module Day5 (resulta, resultb) where
   resulta = password . justs . generateMD5
 
   resultb :: String -> String
-  resultb = id
+  resultb = order . map toTuple . map (drop 5 . fromJust) . justs . generateMD5
 
   md5 :: C.ByteString -> Digest MD5
   md5 = hash
@@ -21,6 +23,12 @@ module Day5 (resulta, resultb) where
   isValid s
     | isPrefixOf ["0", "0", "0", "0", "0"] $ map pure s = Just s
     | otherwise = Nothing
+
+  order :: [(Int, Char)] -> String
+  order s =  map snd $ sortBy (compare `on` fst) s
+
+  toTuple :: String -> (Int, Char)
+  toTuple s = (digitToInt $ head s, head $ tail s)
 
   password :: [Maybe String] -> String
   password = map (head . drop 5 . fromJust)
