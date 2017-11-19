@@ -1,30 +1,29 @@
 module Day5 (resulta, resultb) where
 
   import Data.List
-  import qualified Data.ByteString.Lazy as LB
-  import qualified Data.ByteString.Builder as LBB
+  import Data.Maybe
+  import qualified Data.ByteString.Char8 as C
   import Crypto.Hash
 
   resulta :: String -> String
-  resulta = password . validate . generateMD5
+  resulta = password . justs . generateMD5
 
   resultb :: String -> String
   resultb = id
 
-  md5 :: LB.ByteString -> Digest MD5
-  md5 = hashlazy
+  md5 :: C.ByteString -> Digest MD5
+  md5 = hash
 
-  isValid :: String -> Bool
-  isValid s = isPrefixOf ["0", "0", "0", "0", "0"] $ map pure s
+  justs :: [Maybe String] -> [Maybe String]
+  justs s = take 8 $ filter isJust s
 
-  password :: [String] -> String
-  password = map (head . drop 5)
+  isValid :: String -> Maybe String
+  isValid s
+    | isPrefixOf ["0", "0", "0", "0", "0"] $ map pure s = Just s
+    | otherwise = Nothing
 
-  validate :: [String] -> [String]
-  validate s = take 8 $ filter isValid s
+  password :: [Maybe String] -> String
+  password = map (head . drop 5 . fromJust)
 
-  generateMD5 :: String -> [String]
-  generateMD5 s = map (show . md5 . LBB.toLazyByteString . LBB.stringUtf8 . (++) s . show) plusOne 
-
-  plusOne :: [Integer]
-  plusOne = iterate (+1) 0
+  generateMD5 :: String -> [Maybe String]
+  generateMD5 s = map (isValid . show . md5 . C.pack . (++) s . show) [0..]
