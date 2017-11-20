@@ -8,21 +8,29 @@ module Day5 (resulta, resultb) where
   import Crypto.Hash
 
   resulta :: String -> String
-  resulta = password . justs . generateMD5
+  resulta s = take 8 $ (password . justs . (generateMD5 isValid')) s
 
   resultb :: String -> String
-  resultb = order . map toTuple . map (drop 5 . fromJust) . justs . generateMD5
+  resultb s = order . take 8 $ (nubBy (\a b -> fst a == fst b) . map toTuple . map (drop 5 . fromJust) . justs . (generateMD5 isValid)) s
 
   md5 :: C.ByteString -> Digest MD5
   md5 = hash
 
   justs :: [Maybe String] -> [Maybe String]
-  justs s = take 8 $ filter isJust s
+  justs = filter isJust
 
   isValid :: String -> Maybe String
-  isValid s
-    | isPrefixOf ["0", "0", "0", "0", "0"] $ map pure s = Just s
-    | otherwise = Nothing
+  isValid s@('0':'0':'0':'0':'0':p:c:xs)
+    | (digitToInt p) <= 7 = Just s
+    | otherwise = Nothing
+  isValid _ = 
+    Nothing
+
+  isValid' :: String -> Maybe String
+  isValid' s@('0':'0':'0':'0':'0':xs) =
+    Just s
+  isValid' _ = 
+    Nothing
 
   order :: [(Int, Char)] -> String
   order s =  map snd $ sortBy (compare `on` fst) s
@@ -33,5 +41,5 @@ module Day5 (resulta, resultb) where
   password :: [Maybe String] -> String
   password = map (head . drop 5 . fromJust)
 
-  generateMD5 :: String -> [Maybe String]
-  generateMD5 s = map (isValid . show . md5 . C.pack . (++) s . show) [0..]
+  generateMD5 :: (String -> Maybe String) ->  String -> [Maybe String]
+  generateMD5 fn s = map (fn . show . md5 . C.pack . (++) s . show) [0..]
