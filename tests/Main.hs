@@ -7,19 +7,22 @@ module Main (main) where
   import Day3Tests
   import Day4Tests
   import Day5Tests
+  import Day6Tests
 
   main :: IO ()
   main = do
     dir <- getCurrentDirectory 
     day3a <- readFile (dir ++ "/tests/Day3.csv")
     day4a <- readFile (dir ++ "/tests/Day4.csv")
+    day6a <- readFile (dir ++ "/tests/Day6.csv")
 
     counts2 <- runTestTT (test [
              day1,
              day2,
              day3 day3a,
              day4 day4a,
-             day5
+             -- day5
+             day6 day6a
             ])
 
     if (errors counts2 + failures counts2 == 0)
