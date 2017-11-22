@@ -1,4 +1,4 @@
-module Day7 (resulta, resultb, palindrome) where
+module Day7 (resulta, resultb, palindrome, toIPv7, IPv7(IPv7)) where
 
   import Data.List
   import Data.Function
@@ -7,10 +7,10 @@ module Day7 (resulta, resultb, palindrome) where
 
   type Hypernet = String
   type ABBA = String
-  data IPv7 = IPv7 ABBA Hypernet ABBA
+  data IPv7 = IPv7 ABBA Hypernet ABBA deriving (Show, Eq)
 
-  resulta :: String -> String
-  resulta = id
+  resulta :: String -> Int
+  resulta = length . filter verify . map toIPv7 . lines
 
   resultb :: String -> String
   resultb = id
@@ -21,6 +21,10 @@ module Day7 (resulta, resultb, palindrome) where
     | otherwise = palindrome $ tail s
   palindrome _ =
     False
+
+  verify :: Either ParseError IPv7 -> Bool
+  verify (Right (IPv7 a b c)) = all id [palindrome a || palindrome c, not (palindrome b)]
+  verify (Left _) = error "parse error"
 
   toIPv7 :: String -> Either ParseError IPv7
   toIPv7 = parse match ""
