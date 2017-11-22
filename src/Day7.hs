@@ -15,15 +15,15 @@ module Day7 (resulta, resultb) where
   resultb :: String -> String
   resultb = id
 
-  palindrome :: String -> Bool
-  palindrome s@(a:b:c:d:xs)
+  abba :: String -> Bool
+  abba s@(a:b:c:d:xs)
     | a == d && b == c && a /= b && c /= d = True
-    | otherwise = palindrome $ tail s
-  palindrome _ =
+    | otherwise = abba $ tail s
+  abba _ =
     False
 
   tls :: Either ParseError IPv7 -> Bool
-  tls (Right (IPv7 a b)) = all id [any palindrome a, all (not . palindrome) b]
+  tls (Right (IPv7 a b)) = all id [any abba a, all (not . abba) b]
   tls (Left _) = error "parse error"
 
   toIPv7 :: String -> Either ParseError IPv7
