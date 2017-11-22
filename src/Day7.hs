@@ -2,8 +2,12 @@ module Day7 (resulta, resultb, palindrome) where
 
   import Data.List
   import Data.Function
+  import Text.Parsec
+  import Text.Parsec.String
 
-  data IPv7 = IPv7
+  type Hypernet = String
+  type ABBA = String
+  data IPv7 = IPv7 ABBA Hypernet ABBA
 
   resulta :: String -> String
   resulta = id
@@ -18,5 +22,14 @@ module Day7 (resulta, resultb, palindrome) where
   palindrome _ =
     False
 
-  parse :: String -> IPv7
-  parse s = IPv7
+  toIPv7 :: String -> Either ParseError IPv7
+  toIPv7 = parse match ""
+
+  match :: Parser IPv7
+  match = do
+    ab <- many1 letter
+    _ <- char '['
+    hypernet <- many1 letter
+    _ <- char ']'
+    ba <- many1 letter
+    return $ IPv7 ab hypernet ba
