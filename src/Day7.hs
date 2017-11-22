@@ -22,6 +22,13 @@ module Day7 (resulta, resultb) where
   abba _ =
     False
 
+  aba :: String -> Bool
+  aba s@(a:b:c:xs)
+    | a == c && b /= a && b /= c = True
+    | otherwise = aba $ tail s
+  aba _ =
+    False
+
   tls :: Either ParseError IPv7 -> Bool
   tls (Right (IPv7 a b)) = all id [any abba a, all (not . abba) b]
   tls (Left _) = error "parse error"
