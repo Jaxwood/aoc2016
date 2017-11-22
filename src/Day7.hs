@@ -10,7 +10,7 @@ module Day7 (resulta, resultb) where
   data IPv7 = IPv7 [Supernet] [Hypernet] deriving (Show, Eq)
 
   resulta :: String -> Int
-  resulta = length . filter verify . map toIPv7 . lines
+  resulta = length . filter tls . map toIPv7 . lines
 
   resultb :: String -> String
   resultb = id
@@ -22,9 +22,9 @@ module Day7 (resulta, resultb) where
   palindrome _ =
     False
 
-  verify :: Either ParseError IPv7 -> Bool
-  verify (Right (IPv7 a b)) = all id [any palindrome a, all (not . palindrome) b]
-  verify (Left _) = error "parse error"
+  tls :: Either ParseError IPv7 -> Bool
+  tls (Right (IPv7 a b)) = all id [any palindrome a, all (not . palindrome) b]
+  tls (Left _) = error "parse error"
 
   toIPv7 :: String -> Either ParseError IPv7
   toIPv7 = parse match ""
