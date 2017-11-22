@@ -12,8 +12,8 @@ module Day7 (resulta, resultb) where
   resulta :: String -> Int
   resulta = length . filter tls . map toIPv7 . lines
 
-  resultb :: String -> String
-  resultb = id
+  resultb :: String -> Int
+  resultb = length . filter ssl . map toIPv7 . lines
 
   abba :: String -> Bool
   abba s@(a:b:c:d:xs)
@@ -22,12 +22,16 @@ module Day7 (resulta, resultb) where
   abba _ =
     False
 
-  aba :: String -> Bool
-  aba s@(a:b:c:xs)
-    | a == c && b /= a && b /= c = True
-    | otherwise = aba $ tail s
-  aba _ =
+  aba :: [String] -> String -> Bool
+  aba hn s@(a:b:c:xs)
+    | a == c && b /= a && b /= c && (any (isInfixOf [b,a,b]) hn) = True
+    | otherwise = aba hn (tail s)
+  aba _ _ =
     False
+
+  ssl :: Either ParseError IPv7 -> Bool
+  ssl (Right (IPv7 a b)) = any (aba b) a
+  ssl (Left _) = error "parse error"
 
   tls :: Either ParseError IPv7 -> Bool
   tls (Right (IPv7 a b)) = all id [any abba a, all (not . abba) b]

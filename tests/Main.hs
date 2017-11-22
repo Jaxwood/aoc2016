@@ -17,6 +17,7 @@ module Main (main) where
     day4a <- readFile (dir ++ "/tests/Day4.csv")
     day6a <- readFile (dir ++ "/tests/Day6.csv")
     day7a <- readFile (dir ++ "/tests/Day7.csv")
+    day7b <- readFile (dir ++ "/tests/Day7b.csv")
 
     counts2 <- runTestTT (test [
              day1,
@@ -25,7 +26,7 @@ module Main (main) where
              day4 day4a,
              -- day5
              day6 day6a,
-             day7 day7a
+             day7 day7a day7b
             ])
 
     if (errors counts2 + failures counts2 == 0)

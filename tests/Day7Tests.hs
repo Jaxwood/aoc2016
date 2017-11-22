@@ -3,8 +3,8 @@ module Day7Tests where
   import Data.Either
   import Day7 (resulta, resultb)
 
-  day7 :: String -> Test
-  day7 str = test [
-      assertEqual "day7a" 2 (resulta str)
-      -- assertEqual "day7b" "" (resultb str),
+  day7 :: String -> String -> Test
+  day7 a b = test [
+      assertEqual "day7a" 2 (resulta a),
+      assertEqual "day7b" 3 (resultb b)
     ]
