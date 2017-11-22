@@ -6,8 +6,8 @@ module Day7 (resulta, resultb) where
   import Text.Parsec.String
 
   type Hypernet = String
-  type ABBA = String
-  data IPv7 = IPv7 [ABBA] [Hypernet] deriving (Show, Eq)
+  type Supernet = String
+  data IPv7 = IPv7 [Supernet] [Hypernet] deriving (Show, Eq)
 
   resulta :: String -> Int
   resulta = length . filter verify . map toIPv7 . lines
