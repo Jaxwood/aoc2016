@@ -4,6 +4,9 @@ module Day8 (resulta, resultb, rotate) where
   import Text.Parsec
   import Text.Parsec.String
 
+  rect :: [[Int]]
+  rect = concat [take 6 $ repeat x | x <- [take 50 $ repeat 0]]
+
   resulta :: String -> Int
   resulta s = 0
 
