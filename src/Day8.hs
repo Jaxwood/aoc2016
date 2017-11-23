@@ -12,8 +12,10 @@ module Day8 (resulta, resultb, rotate) where
 
   rotate :: [Int] -> Int -> [Int]
   rotate xs i
-    | i > (length xs) = rotate' xs (length xs - (i `mod` (length xs)))
-    | otherwise = rotate' xs (length xs - i)
+    | i > ln = rotate' xs $ ln - m
+    | otherwise = rotate' xs $ ln - i
+    where ln = length xs
+          m = i `mod` ln
 
   rotate' :: [Int] -> Int -> [Int]
   rotate' xs i =
