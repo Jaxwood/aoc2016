@@ -9,6 +9,7 @@ module Main (main) where
   import Day5Tests
   import Day6Tests
   import Day7Tests
+  import Day8Tests
 
   main :: IO ()
   main = do
@@ -18,6 +19,7 @@ module Main (main) where
     day6a <- readFile (dir ++ "/tests/Day6.csv")
     day7a <- readFile (dir ++ "/tests/Day7.csv")
     day7b <- readFile (dir ++ "/tests/Day7b.csv")
+    day8a <- readFile (dir ++ "/tests/Day8.csv")
 
     counts2 <- runTestTT (test [
              day1,
@@ -26,7 +28,8 @@ module Main (main) where
              day4 day4a,
              -- day5
              day6 day6a,
-             day7 day7a day7b
+             day7 day7a day7b,
+             day8 day8a
             ])
 
     if (errors counts2 + failures counts2 == 0)
