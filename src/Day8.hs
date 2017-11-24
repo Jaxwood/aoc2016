@@ -1,4 +1,4 @@
-module Day8 (resulta, resultb, rotate, toInstructions, Instruction(On,Row,Column), row, update) where
+module Day8 (resulta, resultb) where
 
   import Data.Either (rights)
   import Data.List
