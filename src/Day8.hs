@@ -13,10 +13,13 @@ module Day8 (resulta, resultb, rotate, toInstructions, Instruction(On,Row,Column
   rect = concat [take 6 $ repeat x | x <- [take 50 $ repeat 0]]
 
   resulta :: String -> Int
-  resulta s = 0
+  resulta = lights . foldl update rect . toInstructions
 
   resultb :: String -> Int
   resultb s = 0
+
+  lights :: Screen -> Int
+  lights s = sum $ map sum s
 
   rotate :: [Int] -> Int -> [Int]
   rotate xs i
@@ -30,7 +33,7 @@ module Day8 (resulta, resultb, rotate, toInstructions, Instruction(On,Row,Column
     let (a, b) = splitAt i xs
     in b ++ a
 
-  update :: [[Int]] -> Instruction -> [[Int]]
+  update :: Screen -> Instruction -> Screen
   update ss i@(On x y) =
     map ((\(a, b) -> if b < y then row i a else a)) $ map id $ zip ss [0..]
 

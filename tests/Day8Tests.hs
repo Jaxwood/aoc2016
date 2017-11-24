@@ -4,7 +4,7 @@ module Day8Tests where
 
   day8 :: String -> Test
   day8 a = test [
-      assertEqual "day8a" 0 (resulta a),
+      assertEqual "day8a" 6 (resulta a),
       assertEqual "day8b" 0 (resultb a),
       assertEqual "rotate" [1,0,0] (rotate [0,0,1] 1),
       assertEqual "rotate" [0,1,0] (rotate [0,0,1] 2),
