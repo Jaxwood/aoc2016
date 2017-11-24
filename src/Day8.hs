@@ -15,8 +15,11 @@ module Day8 (resulta, resultb) where
   resulta :: String -> Int
   resulta = lights . foldl update rect . toInstructions
 
-  resultb :: String -> Int
-  resultb s = 0
+  resultb :: String -> String
+  resultb = toCharacters . foldl update rect . toInstructions
+
+  toCharacters :: Screen -> String
+  toCharacters s = foldl (++) "" $ concatMap ((:) "\n") $ map (map (\x -> if x == 0 then " " else "#")) s
 
   lights :: Screen -> Int
   lights s = sum $ map sum s
