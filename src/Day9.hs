@@ -4,8 +4,8 @@ module Day9 (resulta, resultb) where
   import Data.Either (rights)
   import Data.List
 
-  resulta :: String -> String
-  resulta = match
+  resulta :: String -> Int
+  resulta = length . match
 
   resultb :: String -> Int
   resultb = length
