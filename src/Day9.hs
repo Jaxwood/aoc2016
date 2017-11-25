@@ -5,7 +5,7 @@ module Day9 (resulta, resultb) where
   import Data.List
 
   resulta :: String -> Int
-  resulta = length . match
+  resulta = sum . map (length . match) . lines
 
   resultb :: String -> Int
   resultb = length
