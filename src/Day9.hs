@@ -1,6 +1,5 @@
 module Day9 (resulta, resultb) where
 
-  import Data.Char (digitToInt)
   import Data.List
   import Text.Parsec
   import Text.Parsec.String
@@ -8,22 +7,23 @@ module Day9 (resulta, resultb) where
   data Instruction = Instruction Int Int
 
   resulta :: String -> Int
-  resulta = sum . map (length . match') . lines
+  resulta = sum . map (length . match) . lines
 
   resultb :: String -> Int
   resultb = length
 
-  match' :: String -> String
-  match' [] =
-    ""
-  match' ('(':xs) =
-    let r = take a' xs'
-    in (concat $ take b' $ repeat r) ++ (match' (drop a' xs'))
+  match :: String -> String
+  match [] = ""
+
+  match ('(':xs) =
+    let r = take a xs'
+    in (concat $ take b $ repeat r) ++ (match (drop a xs'))
     where
-      (Instruction a' b') = parseField xs
+      (Instruction a b) = parseField xs
       xs' = tail $ dropWhile ((/=)')') xs
-  match' (x:xs) =
-    x:(match' xs)
+
+  match (x:xs) =
+    x:(match xs)
 
   parseField :: String -> Instruction
   parseField xs =
