@@ -10,7 +10,20 @@ module Day9 (resulta, resultb) where
   resulta = sum . map (length . match) . lines
 
   resultb :: String -> Int
-  resultb = length
+  resultb = sum . map (length . match') . lines
+
+  match' :: String -> String
+  match' [] = ""
+
+  match' ('(':xs) =
+    let r = take a xs'
+    in match' $ (concat $ take b $ repeat r) ++ (drop a xs')
+    where
+      (Instruction a b) = parseField xs
+      xs' = tail $ dropWhile ((/=)')') xs
+
+  match' (x:xs) =
+    x:(match' xs)
 
   match :: String -> String
   match [] = ""
