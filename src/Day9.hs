@@ -1,29 +1,47 @@
+{-# LANGUAGE ViewPatterns #-}
 module Day9 (resulta, resultb) where
 
   import Data.List
   import Text.Parsec
   import Text.Parsec.String
 
+  type Pos = Int
+  type Val = Int
   data Instruction = Instruction Int Int
+  data Token = Marker Int Int Int Int | Letter Char Pos Val deriving (Show)
 
   resulta :: String -> Int
   resulta = sum . map (length . match) . lines
 
   resultb :: String -> Int
-  resultb = sum . map (length . match') . lines
+  resultb = sumLetters . updateValue . tokenize [] 0
 
-  match' :: String -> String
-  match' [] = ""
+  closeMarker :: Char -> Bool
+  closeMarker = (/=)')'
 
-  match' ('(':xs) =
-    let r = take a xs'
-    in match' $ (concat $ take b $ repeat r) ++ (drop a xs')
-    where
-      (Instruction a b) = parseField xs
-      xs' = tail $ dropWhile ((/=)')') xs
+  updateValue :: [Token] -> [Token]
+  updateValue ((m@(Marker a b c d)):xs) = m:(updateValue $ (map (update m) xs))
+  updateValue (x:xs) = x:updateValue xs
+  updateValue [] = []
 
-  match' (x:xs) =
-    x:(match' xs)
+  update :: Token -> Token -> Token
+  update (Marker a b c d) l@(Letter c' p v) = if p < d && p > c then (Letter c' p (v*b)) else l
+  update (Marker a b c d) m@(Marker _ _ _ _) = m
+
+  sumLetters :: [Token] -> Int
+  sumLetters ((Marker _ _ _ _):ms) = 0 + sumLetters ms
+  sumLetters ((Letter _ _ v):ms) = v + sumLetters ms
+  sumLetters [] = 0
+
+  tokenize :: [Token] -> Int -> String -> [Token]
+  tokenize acc _ [] = reverse acc
+  tokenize acc i ('(':xs) = let (Instruction a b) = parseField xs
+                            in tokenize ((Marker a b i (i'+a)):acc) i' xs'
+                            where
+                              xs' = tail $ dropWhile closeMarker xs
+                              i' = (length $ takeWhile closeMarker xs) + i + 2
+  tokenize acc i (x:xs) = tokenize ((Letter x i 1):acc) i' xs
+                          where i' = i + 1
 
   match :: String -> String
   match [] = ""
