@@ -5,28 +5,26 @@ module Day9 (resulta, resultb) where
   import Text.Parsec
   import Text.Parsec.String
 
-  type Pos = Int
-  type Val = Int
   data Instruction = Instruction Int Int
-  data Token = Marker Int Int Int Int | Letter Char Pos Val deriving (Show)
+  data Token = Marker Int Int Int Int | Letter Char Int Int deriving (Show)
 
   resulta :: String -> Int
   resulta = sum . map (length . match) . lines
 
   resultb :: String -> Int
-  resultb = sumLetters . updateValue . tokenize [] 0
+  resultb = sumLetters . calculate . tokenize [] 0
 
   closeMarker :: Char -> Bool
   closeMarker = (/=)')'
 
-  updateValue :: [Token] -> [Token]
-  updateValue ((m@(Marker a b c d)):xs) = m:(updateValue $ (map (update m) xs))
-  updateValue (x:xs) = x:updateValue xs
-  updateValue [] = []
+  calculate :: [Token] -> [Token]
+  calculate ((m@(Marker a b c d)):xs) = m:(calculate $ (map (calculateLetter m) xs))
+  calculate (x:xs) = x:calculate xs
+  calculate [] = []
 
-  update :: Token -> Token -> Token
-  update (Marker a b c d) l@(Letter c' p v) = if p < d && p > c then (Letter c' p (v*b)) else l
-  update (Marker a b c d) m@(Marker _ _ _ _) = m
+  calculateLetter :: Token -> Token -> Token
+  calculateLetter (Marker a b c d) l@(Letter c' p v) = if p < d && p > c then (Letter c' p (v*b)) else l
+  calculateLetter (Marker a b c d) m@(Marker _ _ _ _) = m
 
   sumLetters :: [Token] -> Int
   sumLetters ((Marker _ _ _ _):ms) = 0 + sumLetters ms
