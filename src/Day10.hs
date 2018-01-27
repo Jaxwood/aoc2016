@@ -13,8 +13,17 @@ module Day10 (resulta, resultb) where
                       m = hydrate M.empty is
                   in follow (\a' b' -> if min a' b' == min a b && max a' b' == max a b then True else False) is m
 
-  resultb :: String -> String
-  resultb = id
+
+  resultb :: String -> Int -> Int -> Int
+  resultb s a b = let is = map (right . parseInput) $ lines s
+                      m = hydrate M.empty is
+                  in follow' (\m' -> and [M.member 1000 m', M.member 1001 m', M.member 1002 m']) is m
+
+  product' :: M.Map Int [Int] -> Int
+  product' m = let z = head $ (M.!) m 1000
+                   o = head $ (M.!) m 1001
+                   t = head $ (M.!) m 1002
+               in z * o * t
 
   follow :: (Int -> Int -> Bool) -> [Instruction] -> M.Map Int [Int] -> Int
   follow fn is m = let m' = M.filter ((==2) . length) m
@@ -23,13 +32,30 @@ module Day10 (resulta, resultb) where
                    in case b' of
                      Nothing -> error "not found"
                      (Just (Instruction _ t t')) ->
-                      if fn l h then b else follow fn is $ remove' b $ update' t' (max l h) $ update' t (min l h) m
+                      if fn l h then
+                        b
+                      else
+                        follow fn is $ remove' b $ update' t' (max l h) $ update' t (min l h) m
+
+  follow' :: (M.Map Int [Int] -> Bool) -> [Instruction] -> M.Map Int [Int] -> Int
+  follow' fn is m = let m' = M.filter ((==2) . length) m
+                        (b,l:h:[]) = if M.null m' then error "not found" else M.elemAt 0 m'
+                        b' = find (findInstruction b) is
+                    in case b' of
+                      Nothing -> error "not found"
+                      (Just (Instruction _ t t')) ->
+                        let m'' = remove' b $ update' t' (max l h) $ update' t (min l h) m
+                        in if fn m'' then product' m'' else follow' fn is m''
 
   remove' :: Int -> M.Map Int [Int] -> M.Map Int [Int]
   remove' b m = M.adjust (\v -> []) b m
 
   update' :: Target -> Int -> M.Map Int [Int] -> M.Map Int [Int]
-  update' (Output _) i m = m
+  update' (Output o) i m = case o of
+                            0 -> M.alter (set i) 1000 m
+                            1 -> M.alter (set i) 1001 m
+                            2 -> M.alter (set i) 1002 m
+                            _ -> m
   update' (Bot b) i m = M.alter (set i) b m
 
   hydrate :: M.Map Int [Int] -> [Instruction] -> M.Map Int [Int]
