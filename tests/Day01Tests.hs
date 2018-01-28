@@ -1,7 +1,7 @@
-module Day1Tests where
+module Day01Tests where
 
   import Test.HUnit
-  import Day1 (resulta, resultb)
+  import Day01 (resulta, resultb)
 
   day1 :: Test
   day1 = test [

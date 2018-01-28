@@ -1,4 +1,4 @@
-module Day1 (resulta, resultb) where
+module Day01 (resulta, resultb) where
 
   import Data.Maybe
   import Data.List

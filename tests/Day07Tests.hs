@@ -1,7 +1,7 @@
-module Day7Tests where
+module Day07Tests where
   import Test.HUnit
   import Data.Either
-  import Day7 (resulta, resultb)
+  import Day07 (resulta, resultb)
 
   day7 :: String -> String -> Test
   day7 a b = test [

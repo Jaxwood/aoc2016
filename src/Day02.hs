@@ -1,4 +1,4 @@
-module Day2 (resulta, resultb) where
+module Day02 (resulta, resultb) where
 
   data Move = U | D | L | R deriving (Eq, Show)
 

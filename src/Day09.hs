@@ -1,5 +1,5 @@
 {-# LANGUAGE ViewPatterns #-}
-module Day9 (resulta, resultb) where
+module Day09 (resulta, resultb) where
 
   import Data.List
   import Text.Parsec

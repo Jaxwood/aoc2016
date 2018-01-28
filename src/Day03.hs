@@ -1,4 +1,4 @@
-module Day3 (resulta, resultb) where
+module Day03 (resulta, resultb) where
 
   import Data.List.Split
   import Data.List

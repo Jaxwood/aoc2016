@@ -1,6 +1,6 @@
-module Day4Tests where
+module Day04Tests where
   import Test.HUnit
-  import Day4 (resulta, resultb)
+  import Day04 (resulta, resultb)
 
   day4 :: String -> Test
   day4 day4a = test [

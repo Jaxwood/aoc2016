@@ -1,4 +1,4 @@
-module Day8 (resulta, resultb) where
+module Day08 (resulta, resultb) where
 
   import Data.Either (rights)
   import Data.List

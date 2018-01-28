@@ -1,4 +1,4 @@
-module Day5 (resulta, resultb) where
+module Day05 (resulta, resultb) where
 
   import Data.Char
   import Data.Function
