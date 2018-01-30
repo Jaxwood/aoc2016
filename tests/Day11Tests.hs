@@ -6,6 +6,6 @@ module Day11Tests where
 
   day11 :: String -> Test
   day11 a = test [
-      assertEqual "day11a" 11 (resulta a),
+      assertEqual "day11a" 11 (resulta [["LM","HM"],["HG"],["LG"],[]]),
       assertEqual "day11b" 0 (resultb a)
     ]
