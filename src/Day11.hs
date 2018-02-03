@@ -8,6 +8,9 @@ module Day11 (resulta, resultb, RTG(Generator,Microchip), validate) where
   resultb :: String -> Int
   resultb s = 0
 
+  validateAll :: [RTG] -> Bool
+  validate rtgs = True
+
   validate :: RTG -> RTG -> Bool
   validate (Generator _) (Generator _) = True
   validate (Microchip x) (Generator y) = x == y
