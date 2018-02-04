@@ -8,11 +8,11 @@ module Day11 (resulta, resultb, RTG(Generator,Microchip), validate) where
   resultb :: String -> Int
   resultb s = 0
 
-  validateAll :: [RTG] -> Bool
-  validate rtgs = True
+  validate :: [RTG] -> [RTG] -> Bool
+  validate [] _ = True
+  validate ((Generator _):rs) rts = and $ [True,validate rs rts]
+  validate ((Microchip x):rs) rts = and $ [or [(Generator x) `elem` rts, all (not . isGenerator) rts], validate rs rts]
 
-  validate :: RTG -> RTG -> Bool
-  validate (Generator _) (Generator _) = True
-  validate (Microchip x) (Generator y) = x == y
-  validate (Generator x) (Microchip y) = x == y
-  validate (Microchip _) (Microchip _) = True
+  isGenerator :: RTG -> Bool
+  isGenerator (Microchip x) = False
+  isGenerator (Generator x) = True
