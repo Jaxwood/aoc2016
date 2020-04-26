@@ -7,9 +7,9 @@ module Day11Tests where
 
   day11 :: String -> Test
   day11 a = test [
-      assertEqual "day11a" Nothing (resulta $ M.fromList [
+      assertEqual "day11a" Nothing (resulta (M.fromList [
         (1, [Microchip 'L', Microchip 'H']),
         (2, [Generator 'H']),
         (3, [Generator 'L']),
-        (4, [])])
+        (4, [])]) 1)
     ]
