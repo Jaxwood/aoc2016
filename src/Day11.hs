@@ -1,4 +1,4 @@
-module Day11 (resulta, RTG(Generator,Microchip)) where
+module Day11 (resulta, RTG(Generator,Microchip), validate) where
  
   import qualified Data.Map as M
   import qualified Data.Set as S
@@ -42,6 +42,23 @@ module Day11 (resulta, RTG(Generator,Microchip)) where
   -- create new maps based on the combinations
   toMap :: M.Map Int [RTG] -> Int -> [[RTG]] -> [M.Map Int [RTG]]
   toMap m lvl cs = concatMap (move m lvl) cs
+
+  -- validate the building floor
+  isValid :: [RTG] -> RTG -> Bool -> Bool
+  isValid rtgs (Microchip x) acc = and [acc, or [matching, noGenerators]]
+    where
+      matching = (Generator x) `elem` rtgs
+      noGenerators = not $ any isGenerator rtgs
+  isValid rtgs _ acc = acc
+
+  -- validate the building floor
+  validate :: [RTG] -> Bool
+  validate rtgs = foldr (isValid rtgs) True rtgs
+
+  -- check for generator
+  isGenerator :: RTG -> Bool
+  isGenerator (Generator x) = True
+  isGenerator _ = False
 
   resulta :: M.Map Int [RTG] -> Int -> Maybe [M.Map Int [RTG]]
   resulta m lvl = toMap m lvl <$> combinations m lvl 
