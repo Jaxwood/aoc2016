@@ -1,4 +1,4 @@
-module Day11 (resulta, RTG(Generator,Microchip), validate, move) where
+module Day11 (resulta, RTG(Elevator,Generator,Microchip), validate, move) where
  
   import qualified Data.Map as M
   import qualified Data.Set as S
@@ -6,7 +6,7 @@ module Day11 (resulta, RTG(Generator,Microchip), validate, move) where
   import Data.Maybe
   import Control.Monad
 
-  data RTG = Generator Char | Microchip Char deriving (Eq,Show)
+  data RTG = Elevator | Generator Char | Microchip Char deriving (Eq,Show)
 
   instance Ord RTG where
     (Generator x) `compare` (Generator y) = x `compare` y
@@ -27,12 +27,14 @@ module Day11 (resulta, RTG(Generator,Microchip), validate, move) where
   move :: M.Map Int [RTG] -> Int -> [RTG] -> [Maybe (M.Map Int [RTG])]
   move m lvl rs = [up m, down m]
     where
-      up = look lvl (\\ rs) >=> look (lvl + 1) (++ rs)
-      down = look lvl (\\ rs) >=> look (lvl - 1) (++ rs)
+      up = look lvl (\\ rs) >=> look (lvl + 1) (++ rs) >=> look (lvl + 1) (++ [Elevator])
+      down = look lvl (\\ rs) >=> look (lvl - 1) (++ rs) >=> look (lvl - 1) (++ [Elevator])
   
   look :: Int -> ([RTG] -> [RTG]) -> M.Map Int [RTG] -> Maybe (M.Map Int [RTG])
-  look k f m = let val = const $ f <$> M.lookup k m
-               in Just $ M.update val k m
+  look k f m = let val = f <$> M.lookup k m
+               in case val of
+                 Nothing -> Nothing
+                 (Just _) -> Just $ M.update (const val) k m
 
   -- create new maps based on the combinations
   toMap :: M.Map Int [RTG] -> Int -> [[RTG]] -> [Maybe (M.Map Int [RTG])]
@@ -58,5 +60,13 @@ module Day11 (resulta, RTG(Generator,Microchip), validate, move) where
   isGenerator (Generator x) = True
   isGenerator _ = False
 
-  resulta :: M.Map Int [RTG] -> Int -> [Maybe (M.Map Int [RTG])]
-  resulta m lvl = filter validate $ concatMap (toMap m lvl) $ combinations m lvl 
+  -- check for elevator
+  isElevator :: RTG -> Bool
+  isElevator Elevator = True
+  isElevator _ = False
+
+  resulta :: M.Map Int [RTG] -> [Maybe (M.Map Int [RTG])]
+  resulta m = filter validate $ concatMap (toMap withoutElevator lvl) $ combinations withoutElevator lvl 
+              where
+                lvl = fst $ head $ M.toList $ M.filter (any isElevator) m
+                withoutElevator = M.map (filter (not . isElevator)) m
