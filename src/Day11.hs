@@ -3,8 +3,8 @@ module Day11 (resulta, RTG(Generator,Microchip), validate, move) where
   import qualified Data.Map as M
   import qualified Data.Set as S
   import Data.List
-  import Control.Monad as Mo
   import Data.Maybe
+  import Control.Monad
 
   data RTG = Generator Char | Microchip Char deriving (Eq,Show)
 
@@ -24,27 +24,18 @@ module Day11 (resulta, RTG(Generator,Microchip), validate, move) where
     in withinRange <$> combos
 
   -- move the elevator
-  move :: M.Map Int [RTG] -> Int -> [RTG] -> [M.Map Int [RTG]]
-  move m lvl rs =
-    case [validate current, validate addedAbove, validate addedBelow] of
-      [True, True, True] ->
-        [ M.update (const addedAbove) (lvl + 1) (M.update (const removed) lvl m),
-          M.update (const addedBelow) (lvl - 1) (M.update (const removed) lvl m)]
-      [True, True, False] ->
-        [M.update (const addedAbove) (lvl + 1) (M.update (const removed) lvl m)]
-      [True, False, True] ->
-        [M.update (const addedBelow) (lvl - 1) (M.update (const removed) lvl m)]
-      otherwise ->
-        []
-    where current = M.lookup lvl m
-          above = M.lookup (lvl + 1) m
-          below = M.lookup (lvl - 1) m
-          removed = (\\ rs) <$> current
-          addedAbove = (++ rs) <$> above
-          addedBelow = (++ rs) <$> below
+  move :: M.Map Int [RTG] -> Int -> [RTG] -> [Maybe (M.Map Int [RTG])]
+  move m lvl rs = [up m, down m]
+    where
+      up = look lvl (\\ rs) >=> look (lvl + 1) (++ rs)
+      down = look lvl (\\ rs) >=> look (lvl - 1) (++ rs)
+  
+  look :: Int -> ([RTG] -> [RTG]) -> M.Map Int [RTG] -> Maybe (M.Map Int [RTG])
+  look k f m = let val = const $ f <$> M.lookup k m
+               in Just $ M.update val k m
 
   -- create new maps based on the combinations
-  toMap :: M.Map Int [RTG] -> Int -> [[RTG]] -> [M.Map Int [RTG]]
+  toMap :: M.Map Int [RTG] -> Int -> [[RTG]] -> [Maybe (M.Map Int [RTG])]
   toMap m lvl cs = concatMap (move m lvl) cs
 
   -- validate the building floor
@@ -56,10 +47,10 @@ module Day11 (resulta, RTG(Generator,Microchip), validate, move) where
   isValid rtgs _ acc = acc
 
   -- validate the building floor
-  validate :: Maybe [RTG] -> Bool
-  validate rtgs =
-    case rtgs of
-      (Just rs) -> foldr (isValid rs) True rs 
+  validate :: Maybe (M.Map Int [RTG]) -> Bool
+  validate rs =
+    case rs of
+      (Just xs) -> M.foldr (\ns a -> foldr (isValid ns) a ns) True xs
       Nothing -> False
 
   -- check for generator
@@ -67,5 +58,5 @@ module Day11 (resulta, RTG(Generator,Microchip), validate, move) where
   isGenerator (Generator x) = True
   isGenerator _ = False
 
-  resulta :: M.Map Int [RTG] -> Int -> Maybe [M.Map Int [RTG]]
-  resulta m lvl = toMap m lvl <$> combinations m lvl 
+  resulta :: M.Map Int [RTG] -> Int -> [Maybe (M.Map Int [RTG])]
+  resulta m lvl = filter validate $ concatMap (toMap m lvl) $ combinations m lvl 
