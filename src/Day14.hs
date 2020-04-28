@@ -6,8 +6,15 @@ module Day14 (resulta) where
   md5 :: C.ByteString -> Digest MD5
   md5 = hash
 
-  generateMD5 :: String -> [String]
-  generateMD5 s = map (show . md5 . C.pack . (++) s . show) [0..]
+  generateMD5 :: String -> [(Int, String)]
+  generateMD5 s = map (\n -> (n, fn n)) [0..]
+    where fn = (show . md5 . C.pack . (++) s . show)
 
-  resulta :: String -> Int -> [String]
-  resulta salt no = take 20 $ generateMD5 salt
+  repeats :: (Int, String) -> Bool
+  repeats (_, (a:b:[])) = False
+  repeats (n, (a:b:c:xs))
+    | a == b && a == c = True
+    | otherwise = repeats (n, (b:c:xs))
+
+  resulta :: String -> Int -> [(Int, String)]
+  resulta salt no = take 5 $ filter repeats $ generateMD5 salt
