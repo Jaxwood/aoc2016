@@ -18,9 +18,9 @@ cabal-version:       >=1.10
 library
   exposed-modules: Day1
   other-modules:       
-    Day01, Day02, Day03, Day04, Day05, Day06, Day07, Day08, Day09, Day10, Day11, Day12,
+    Day01, Day02, Day03, Day04, Day05, Day06, Day07, Day08, Day09, Day10, Day11, Day12, Day13,
     Day01Tests, Day02Tests, Day03Tests, Day04Tests, Day05Tests, Day06Tests, Day07Tests,
-    Day08Tests, Day09Tests, Day10Tests, Day11Tests, Day12Tests
+    Day08Tests, Day09Tests, Day10Tests, Day11Tests, Day12Tests, Day13Tests
   build-depends:       
     base >=4.9,
     HUnit,
@@ -39,9 +39,9 @@ test-suite tests
   main-is: Main.hs
   hs-source-dirs: tests, src
   other-modules:
-    Day01, Day02, Day03, Day04, Day05, Day06, Day07, Day08, Day09, Day10, Day11, Day12,
+    Day01, Day02, Day03, Day04, Day05, Day06, Day07, Day08, Day09, Day10, Day11, Day12, Day13,
     Day01Tests, Day02Tests, Day03Tests, Day04Tests, Day05Tests, Day06Tests, Day07Tests,
-    Day08Tests, Day09Tests, Day10Tests, Day11Tests, Day12Tests
+    Day08Tests, Day09Tests, Day10Tests, Day11Tests, Day12Tests, Day13Tests
   build-depends:
     base >= 4.9,
     HUnit,
