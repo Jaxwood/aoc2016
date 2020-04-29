@@ -4,42 +4,41 @@ module Day14 (resulta) where
   import Crypto.Hash
   import Data.Maybe
 
+  -- alias hash to md5
   md5 :: C.ByteString -> Digest MD5
   md5 = hash
 
-  transform :: (Int -> String) -> Int -> (Int, Maybe Char, Maybe Char)
-  transform fn n = (n, threes candidate, fives candidate)
+  -- transform the stream
+  transform :: (Int -> String) -> Int -> (Int, [Maybe Char])
+  transform fn n = (n, [threes candidate, fives candidate])
     where candidate = fn n
 
-  generateMD5 :: String -> [(Int, Maybe Char, Maybe Char)]
+  -- generate an md5 stream
+  generateMD5 :: String -> [(Int, [Maybe Char])]
   generateMD5 s = map (transform fn) [0..]
     where fn = (show . md5 . C.pack . (++) s . show)
 
+  -- filter for three consecutive characters
   threes :: String -> Maybe Char
   threes (a:b:[]) = Nothing
   threes (a:b:c:xs)
     | a == b && a == c = Just a
     | otherwise = threes (b:c:xs)
 
+  -- filter for fives consecutive characters
   fives :: String -> Maybe Char
   fives (a:b:c:d:[]) = Nothing
   fives (a:b:c:d:e:xs)
     | all (==a) [b,c,d,e] = Just a
     | otherwise = fives (b:c:d:e:xs)
 
-  five :: Maybe Char -> (Int, Maybe Char, Maybe Char) -> Bool
-  five c (_, _, f) = f == c
-
-  hasAFive :: [(Int, Maybe Char, Maybe Char)] -> (Int, Maybe Char, Maybe Char) -> Bool
-  hasAFive stream (_, Nothing, _) = False
-  hasAFive stream (idx, c, _) = any (five c) $
-    takeWhile ((<= (idx + 1000)) . tpt) $
-    dropWhile ((<= idx) . tpt) stream
-
-  -- extract a triplet
-  tpt :: (a, b, c) -> a
-  tpt (a, _, c) = a
+  -- check if it is a valid key
+  isValid :: [(Int, [Maybe Char])] -> (Int, [Maybe Char]) -> Bool
+  isValid stream (_, [Nothing, _]) = False
+  isValid stream (idx, [c, _]) = any ((== c) . last . snd) $
+    takeWhile ((<= (idx + 1000)) . fst) $
+    dropWhile ((<= idx) . fst) stream
 
   resulta :: String -> Int -> Int
-  resulta salt no = tpt $ last $ take no $ filter (hasAFive md5stream) md5stream
+  resulta salt no = fst $ last $ take no $ filter (isValid md5stream) md5stream
     where md5stream = generateMD5 salt
