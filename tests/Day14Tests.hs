@@ -5,6 +5,6 @@ module Day14Tests where
 
   day14 :: Test
   day14 = test [
-      assertEqual "day14a" [] (resulta "abc" 64) --22728 
-      -- assertEqual "day14a" 0 (resulta "ihaygndm" 64)
+      assertEqual "day14a" 22728 (resulta "abc" 64),
+      assertEqual "day14a" 15035 (resulta "ihaygndm" 64)
     ]
