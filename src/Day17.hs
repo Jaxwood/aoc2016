@@ -1,4 +1,4 @@
-module Day17 (resulta) where
+module Day17 (resulta, resultb) where
 
   import qualified Data.ByteString.Char8 as C
   import Crypto.Hash
@@ -56,3 +56,13 @@ module Day17 (resulta) where
     where a = head as
           next = (neighbors a) $ scout m5
           m5 = md5 a
+
+  resultb :: [Maybe ((Int,Int),String)] -> [Maybe ((Int,Int),String)] -> Int
+  resultb acc [] = foldr (\s a -> max a (length $ extract s)) 0 acc
+  resultb acc as =
+    if any done as 
+    then resultb (acc ++ filter done as) (filter (not . done) as)
+    else resultb acc ((tail as) ++ next)
+      where a = head as
+            next = (neighbors a) $ scout m5
+            m5 = md5 a
