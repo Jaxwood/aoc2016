@@ -1,4 +1,4 @@
-module Day14 (resulta) where
+module Day14 (resulta,resultb) where
 
   import qualified Data.ByteString.Char8 as C
   import Crypto.Hash
@@ -17,6 +17,17 @@ module Day14 (resulta) where
   generateMD5 :: String -> [(Int, [Maybe Char])]
   generateMD5 s = map (transform fn) [0..]
     where fn = (show . md5 . C.pack . (++) s . show)
+
+  -- securely transform the stream
+  secureTransform :: (String -> String) -> String -> Int -> (Int, [Maybe Char])
+  secureTransform fn s n = (n, [threes candidate, fives candidate])
+    where candidate = foldr (\_ acc -> fn acc) start [0..2016]
+          start = s ++ (show n)
+
+  -- generate a secure md5 stream
+  secureMD5 :: String -> [(Int, [Maybe Char])]
+  secureMD5 s = map (secureTransform fn s) [0..]
+    where fn = (show . md5 . C.pack)
 
   -- filter for three consecutive characters
   threes :: String -> Maybe Char
@@ -42,3 +53,7 @@ module Day14 (resulta) where
   resulta :: String -> Int -> Int
   resulta salt no = fst $ last $ take no $ filter (isValid md5stream) md5stream
     where md5stream = generateMD5 salt
+
+  resultb :: String -> Int -> Int
+  resultb salt no = fst $ last $ take no $ filter (isValid md5stream) md5stream
+    where md5stream = secureMD5 salt

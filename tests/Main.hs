@@ -43,9 +43,9 @@ module Main (main) where
              day9 day9a,
              day10 day10a,
              day11 day11a,
-             day12 day12a,
-             day13,
-             day14
+             -- day12 day12a,
+             day13
+             -- day14
             ])
 
     if (errors counts2 + failures counts2 == 0)
