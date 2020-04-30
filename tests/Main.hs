@@ -20,6 +20,7 @@ module Main (main) where
   import Day16Tests
   import Day17Tests
   import Day18Tests
+  import Day19Tests
 
   main :: IO ()
   main = do
@@ -52,8 +53,9 @@ module Main (main) where
              -- day14
              day15,
              -- day16,
-             day17,
-             day18
+             -- day17,
+             -- day18,
+             day19
             ])
 
     if (errors counts2 + failures counts2 == 0)
