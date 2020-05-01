@@ -1,8 +1,12 @@
 module Day21 (resulta) where
 
+  import Data.List (findIndex)
+  import Data.Maybe
+
   data Direction = L | R deriving (Eq,Show)
 
   data Instruction =
+    Rotate Char |
     Move Int Int |
     RotateLeftRight Direction Int |
     Reverse Int Int |
@@ -30,19 +34,30 @@ module Day21 (resulta) where
   rotateLeftRight :: Instruction -> String -> String
   rotateLeftRight (RotateLeftRight d steps) candidate
     | d == L = take len $ drop steps $ cycle candidate
-    | d == R = take len $ drop (len - steps) $ cycle candidate
+    | d == R = take len $ drop (len' - steps) $ cycle candidate
     where len = length candidate
+          len' = if len > steps then len else len * (steps `div` len + 1)
 
   move :: Instruction -> String -> String
-  move (Move x y) candidate =
-    f ++ m ++ x':b
-    where f = take x candidate
-          m = take (y - x) $ drop (succ x) candidate
-          b = drop (succ y) candidate
-          x' = candidate !! x
+  move (Move x y) candidate = snd $
+    foldr (\c (i, acc) ->
+      if x == i then (pred i, acc)
+      else if y == i then (pred i, if x < y then c:x':acc else x':c:acc)
+      else (pred i, c:acc)) (len, "") candidate
+    where x' = candidate !! x
+          len = length candidate - 1
+
+  rotate :: Instruction -> String -> String
+  rotate (Rotate x) candidate = 
+    rotateLeftRight (RotateLeftRight R idx') candidate
+    where idx = fromJust $ findIndex (==x) candidate
+          idx' = if idx >= 4 then idx + 2 else idx + 1
           
   resulta :: String -> String -> String
   resulta input password =
+    rotate (Rotate 'd') $
+    rotate (Rotate 'b') $
+    move (Move 3 0) $
     move (Move 1 4) $
     rotateLeftRight (RotateLeftRight L 1) $
     reversePosition (Reverse 0 4) $
