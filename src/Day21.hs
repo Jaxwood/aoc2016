@@ -1,6 +1,9 @@
 module Day21 (resulta) where
 
+  data Direction = L | R deriving (Eq,Show)
+
   data Instruction =
+    RotateLeftRight Direction Int |
     Reverse Int Int |
     SwapPosition Int Int |
     SwapLetter Char Char deriving (Eq,Show)
@@ -23,8 +26,15 @@ module Day21 (resulta) where
     where f = take x candidate
           b = drop (succ y) candidate
 
+  rotateLeftRight :: Instruction -> String -> String
+  rotateLeftRight (RotateLeftRight d steps) candidate
+    | d == L = take len $ drop steps $ cycle candidate
+    | d == R = take len $ drop (len - steps) $ cycle candidate
+    where len = length candidate
+
   resulta :: String -> String -> String
   resulta input password =
+    rotateLeftRight (RotateLeftRight L 1) $
     reversePosition (Reverse 0 4) $
     swapLetter (SwapLetter 'd' 'b') $
     swapPosition (SwapPosition 0 4) password
