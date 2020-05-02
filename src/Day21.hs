@@ -27,9 +27,11 @@ module Day21 (resulta) where
   
   reversePosition :: Instruction -> String -> String
   reversePosition (Reverse x y) candidate =
-    f ++ (reverse $ take (succ y) $ drop x candidate) ++ b
+    f ++ m ++ b
     where f = take x candidate
-          b = drop (succ y) candidate
+          m = reverse $ take (y' - x) $ drop x candidate
+          b = drop y' candidate
+          y' = succ y
 
   rotateLeftRight :: Instruction -> String -> String
   rotateLeftRight (RotateLeftRight d steps) candidate

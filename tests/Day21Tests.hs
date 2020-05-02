@@ -5,5 +5,5 @@ module Day21Tests where
 
   day21 :: String -> Test
   day21 a = test [
-      assertEqual "day21a" "" (resulta a "abcdefgh")
+      assertEqual "day21a" "gbhcefad" (resulta a "abcdefgh")
     ]
