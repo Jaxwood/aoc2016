@@ -1,6 +1,6 @@
 module Day21 (resulta) where
 
-  import Data.List (findIndex)
+  import Data.List (findIndex, foldl')
   import Data.Maybe
 
   data Direction = L | R deriving (Eq,Show)
@@ -53,13 +53,32 @@ module Day21 (resulta) where
     where idx = fromJust $ findIndex (==x) candidate
           idx' = if idx >= 4 then idx + 2 else idx + 1
           
+  run :: String -> Instruction -> String
+  run s (SwapPosition x y) = swapPosition (SwapPosition x y) s
+  run s (SwapLetter x y) = swapLetter (SwapLetter x y) s
+  run s (Reverse x y) = reversePosition (Reverse x y) s
+  run s (RotateLeftRight x y) = rotateLeftRight (RotateLeftRight x y) s
+  run s (Move x y) = move (Move x y) s
+  run s (Rotate x) = rotate (Rotate x) s
+
+  toInt :: String -> Int
+  toInt = read
+
+  toChar :: String -> Char
+  toChar = head
+
+  parse :: String -> Instruction
+  parse s =
+    case words s of
+      ("move":xs) -> (Move (toInt (xs !! 1)) (toInt (xs !! 4)))
+      ("reverse":xs) -> (Reverse (toInt (xs !! 1)) (toInt (xs !! 3)))
+      ("swap":"position":xs) -> (SwapPosition (toInt (xs !! 0)) (toInt (xs !! 3))) 
+      ("swap":"letter":xs) -> (SwapLetter (toChar (xs !! 0)) (toChar (xs !! 3))) 
+      ("rotate":"based":xs) -> (Rotate (toChar (xs !! 4)))
+      ("rotate":"right":xs) -> (RotateLeftRight R (toInt (xs !! 0)))
+      ("rotate":"left":xs) -> (RotateLeftRight L (toInt (xs !! 0)))
+    where ws = words s
+
   resulta :: String -> String -> String
-  resulta input password =
-    rotate (Rotate 'd') $
-    rotate (Rotate 'b') $
-    move (Move 3 0) $
-    move (Move 1 4) $
-    rotateLeftRight (RotateLeftRight L 1) $
-    reversePosition (Reverse 0 4) $
-    swapLetter (SwapLetter 'd' 'b') $
-    swapPosition (SwapPosition 0 4) password
+  resulta input password = foldl' run password instructions
+    where instructions = map parse $ lines input
