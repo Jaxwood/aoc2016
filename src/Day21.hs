@@ -1,4 +1,4 @@
-module Day21 (resulta) where
+module Day21 (resulta, resultb) where
 
   import Data.List (findIndex, foldl')
   import Data.Maybe
@@ -6,7 +6,7 @@ module Day21 (resulta) where
   data Direction = L | R deriving (Eq,Show)
 
   data Instruction =
-    Rotate Char |
+    Rotate Direction Char |
     Move Int Int |
     RotateLeftRight Direction Int |
     Reverse Int Int |
@@ -50,10 +50,17 @@ module Day21 (resulta) where
           len = length candidate - 1
 
   rotate :: Instruction -> String -> String
-  rotate (Rotate x) candidate = 
-    rotateLeftRight (RotateLeftRight R idx') candidate
+  rotate (Rotate d x) candidate = 
+    rotateLeftRight (RotateLeftRight d idx') candidate
     where idx = fromJust $ findIndex (==x) candidate
           idx' = if idx >= 4 then idx + 2 else idx + 1
+
+  rotate' :: Instruction -> String -> String
+  rotate' (Rotate d x) candidate = 
+    rotateLeftRight (RotateLeftRight d previous) candidate
+    where idx = fromJust $ findIndex (==x) candidate
+          mapping = [1,1,6,2,7,3,8,5]
+          previous = mapping !! idx
           
   run :: String -> Instruction -> String
   run s (SwapPosition x y) = swapPosition (SwapPosition x y) s
@@ -61,7 +68,15 @@ module Day21 (resulta) where
   run s (Reverse x y) = reversePosition (Reverse x y) s
   run s (RotateLeftRight x y) = rotateLeftRight (RotateLeftRight x y) s
   run s (Move x y) = move (Move x y) s
-  run s (Rotate x) = rotate (Rotate x) s
+  run s (Rotate d x) = rotate (Rotate d x) s
+
+  run' :: String -> Instruction -> String
+  run' s (SwapPosition x y) = swapPosition (SwapPosition x y) s
+  run' s (SwapLetter x y) = swapLetter (SwapLetter x y) s
+  run' s (Reverse x y) = reversePosition (Reverse x y) s
+  run' s (RotateLeftRight x y) = rotateLeftRight (RotateLeftRight x y) s
+  run' s (Move x y) = move (Move x y) s
+  run' s (Rotate d x) = rotate' (Rotate d x) s
 
   toInt :: String -> Int
   toInt = read
@@ -76,11 +91,25 @@ module Day21 (resulta) where
       ("reverse":xs) -> (Reverse (toInt (xs !! 1)) (toInt (xs !! 3)))
       ("swap":"position":xs) -> (SwapPosition (toInt (xs !! 0)) (toInt (xs !! 3))) 
       ("swap":"letter":xs) -> (SwapLetter (toChar (xs !! 0)) (toChar (xs !! 3))) 
-      ("rotate":"based":xs) -> (Rotate (toChar (xs !! 4)))
+      ("rotate":"based":xs) -> (Rotate R (toChar (xs !! 4)))
       ("rotate":"right":xs) -> (RotateLeftRight R (toInt (xs !! 0)))
       ("rotate":"left":xs) -> (RotateLeftRight L (toInt (xs !! 0)))
-    where ws = words s
+
+  parse' :: String -> Instruction
+  parse' s =
+    case words s of
+      ("move":xs) -> (Move (toInt (xs !! 4)) (toInt (xs !! 1)))
+      ("reverse":xs) -> (Reverse (toInt (xs !! 1)) (toInt (xs !! 3)))
+      ("swap":"position":xs) -> (SwapPosition (toInt (xs !! 0)) (toInt (xs !! 3))) 
+      ("swap":"letter":xs) -> (SwapLetter (toChar (xs !! 0)) (toChar (xs !! 3))) 
+      ("rotate":"based":xs) -> (Rotate L (toChar (xs !! 4)))
+      ("rotate":"right":xs) -> (RotateLeftRight L (toInt (xs !! 0)))
+      ("rotate":"left":xs) -> (RotateLeftRight R (toInt (xs !! 0)))
 
   resulta :: String -> String -> String
   resulta input password = foldl' run password instructions
     where instructions = map parse $ lines input
+
+  resultb :: String -> String -> String
+  resultb input password = foldl' run' password instructions
+    where instructions = reverse $ map parse' $ lines input
