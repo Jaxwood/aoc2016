@@ -24,6 +24,7 @@ module Main (main) where
   import Day20Tests
   import Day21Tests
   import Day22Tests
+  import Day22 (debug)
 
   main :: IO ()
   main = do
@@ -41,6 +42,7 @@ module Main (main) where
     day20a <- readFile (dir ++ "/tests/Day20.csv")
     day21a <- readFile (dir ++ "/tests/Day21.csv")
     day22a <- readFile (dir ++ "/tests/Day22.csv")
+    day22b <- readFile (dir ++ "/tests/Day22a.csv")
 
     counts2 <- runTestTT (test [
              day1,
@@ -64,8 +66,11 @@ module Main (main) where
              day19,
              day20 day20a,
              day21 day21a,
-             day22 day22a
+             day22 day22a day22b
             ])
+  
+    -- for debugging purposes
+    writeFile "output.txt" $ debug day22a
 
     if (errors counts2 + failures counts2 == 0)
       then exitSuccess
