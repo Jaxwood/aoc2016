@@ -8,4 +8,5 @@ module Day22Tests where
   day22 a b = test [
       assertEqual "day22a" 1003 (resulta a),
       assertEqual "day22b" 7 (resultb b)
+      -- assertEqual "day22b" 192 (resultb a)
     ]

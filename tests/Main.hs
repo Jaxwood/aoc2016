@@ -70,7 +70,7 @@ module Main (main) where
             ])
   
     -- for debugging purposes
-    writeFile "output.txt" $ debug day22a
+    -- writeFile "output.txt" $ debug day22a
 
     if (errors counts2 + failures counts2 == 0)
       then exitSuccess
