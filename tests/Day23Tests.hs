@@ -6,5 +6,5 @@ module Day23Tests where
 
   day23 :: String -> Test
   day23 a = test [
-      assertEqual "day23a" [] (resulta a $ M.fromList [("a", 0), ("b", 0), ("c", 0), ("d", 0)])
+      assertEqual "day23a" 10953 (resulta a $ M.fromList [("a", 7), ("b", 0), ("c", 0), ("d", 0)])
     ]
