@@ -1,4 +1,4 @@
-module Day24 (resulta) where
+module Day24 (resulta, resultb) where
 
   import Data.List
   import qualified Data.Map as M
@@ -52,6 +52,13 @@ module Day24 (resulta) where
 
   resulta :: String -> Int
   resulta s = distances mem opt []
+    where g = parse s
+          ks = M.toList $ M.filter (\c -> c /= Wall && c /= Open) g
+          opt = filter (\xs -> head xs == '0') $ permutations $ map (getLocation . snd) ks
+          mem = foldr (\n acc -> case (g M.! n) of (Blueprint c) -> M.insert c (scan g S.empty [(n,0)] M.empty) acc) M.empty (map fst ks)
+
+  resultb :: String -> Int
+  resultb s = distances mem (map (\c -> c ++ "0") opt) []
     where g = parse s
           ks = M.toList $ M.filter (\c -> c /= Wall && c /= Open) g
           opt = filter (\xs -> head xs == '0') $ permutations $ map (getLocation . snd) ks
