@@ -19,11 +19,11 @@ library
   exposed-modules: Day1
   other-modules:       
     Day01, Day02, Day03, Day04, Day05, Day06, Day07, Day08, Day09, Day10, Day11, Day12,
-    Day13, Day14, Day15, Day16, Day17, Day18, Day19, Day20, Day21, Day22, Day23, Day24,
+    Day13, Day14, Day15, Day16, Day17, Day18, Day19, Day20, Day21, Day22, Day23, Day24, Day25,
     Day01Tests, Day02Tests, Day03Tests, Day04Tests, Day05Tests, Day06Tests, Day07Tests,
     Day08Tests, Day09Tests, Day10Tests, Day11Tests, Day12Tests, Day13Tests, Day14Tests,
     Day15Tests, Day16Tests, Day17Tests, Day18Tests, Day19Tests, Day20Tests, Day21Tests,
-    Day22Tests, Day23Tests, Day24Tests
+    Day22Tests, Day23Tests, Day24Tests, Day25Tests
   build-depends:       
     base >=4.9,
     HUnit,
@@ -43,11 +43,11 @@ test-suite tests
   hs-source-dirs: tests, src
   other-modules:
     Day01, Day02, Day03, Day04, Day05, Day06, Day07, Day08, Day09, Day10, Day11, Day12,
-    Day13, Day14, Day15, Day16, Day17, Day18, Day19, Day20, Day21, Day22, Day23, Day24,
+    Day13, Day14, Day15, Day16, Day17, Day18, Day19, Day20, Day21, Day22, Day23, Day24, Day25,
     Day01Tests, Day02Tests, Day03Tests, Day04Tests, Day05Tests, Day06Tests, Day07Tests,
     Day08Tests, Day09Tests, Day10Tests, Day11Tests, Day12Tests, Day13Tests, Day14Tests,
     Day15Tests, Day16Tests, Day17Tests, Day18Tests, Day19Tests, Day20Tests, Day21Tests,
-    Day22Tests, Day23Tests, Day24Tests
+    Day22Tests, Day23Tests, Day24Tests, Day25Tests
   build-depends:
     base >= 4.9,
     HUnit,
