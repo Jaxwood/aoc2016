@@ -7,9 +7,17 @@ module Day11Tests where
 
   day11 :: String -> Test
   day11 a = test [
-      assertEqual "day11a" 11 (resulta [Day11.State {
+      assertEqual "day11a" 33 (resulta [Day11.State {
         current = 1,
         moves = 0,
-        building = M.fromList [(1, [Microchip 'H', Microchip 'L']), (2, [Generator 'H']), (3, [Generator 'L']), (4, [])]
-        }] S.empty)
+        building = M.fromList [
+          (1, [Microchip 'A', Generator 'A']),
+          (2, [Generator 'B', Generator 'C', Generator 'D', Generator 'E']),
+          (3, [Microchip 'B', Microchip 'C', Microchip 'D', Microchip 'E']),
+          (4, [])]
+        }] 10 (S.insert (1, M.fromList [
+          (1, [Microchip 'A', Generator 'A']),
+          (2, [Generator 'B', Generator 'C', Generator 'D', Generator 'E']),
+          (3, [Microchip 'B', Microchip 'C', Microchip 'D', Microchip 'E']),
+          (4, [])]) S.empty))
     ]

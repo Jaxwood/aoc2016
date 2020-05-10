@@ -6,15 +6,20 @@ module Day11 (resulta, RTG(..), State(..)) where
 
   data RTG = Generator Char | Microchip Char deriving (Eq,Show)
 
+  type Building = M.Map Int [RTG]
+
+  -- Make RTG instance of Ord
   instance Ord RTG where
     (Generator x) `compare` (Generator y) = x `compare` y
     (Microchip x) `compare` (Microchip y) = x `compare` y
-    _ `compare` _ = LT
+    (Generator x) `compare` (Microchip y) = GT
+    (Microchip x) `compare` (Generator y) = LT
 
+  -- Represent a snapshot of the building
   data State = State {
     current :: Int,
     moves :: Int,
-    building :: M.Map Int [RTG]
+    building :: Building
   } deriving (Eq, Show)
 
    -- get all the combinations for microchip and generator on a certain building floor
@@ -38,6 +43,7 @@ module Day11 (resulta, RTG(..), State(..)) where
   isGenerator (Generator x) = True
   isGenerator _ = False
 
+  -- find next levels to move to
   levels :: Int -> [Int]
   levels l
     |  l == 1 = [2]
@@ -45,8 +51,9 @@ module Day11 (resulta, RTG(..), State(..)) where
     |  l == 3 = [2,4]
     |  l == 4 = [3]
   
-  updateBuilding :: State -> (Int, [RTG]) -> State
-  updateBuilding s (l, rts) = s { current = l, moves = succ m, building = final }
+  -- update the building layout
+  layout :: State -> (Int, [RTG]) -> State
+  layout s (l, rts) = s { current = l, moves = succ m, building = final }
     where lvl = current s
           b = building s
           m = moves s
@@ -55,17 +62,23 @@ module Day11 (resulta, RTG(..), State(..)) where
           update = M.insert lvl (sort (cur \\ rts)) b
           final = M.insert l (sort (next ++ rts)) update
 
+  -- move the elevator
   move :: State -> [RTG] -> [State]
-  move s rts = map (updateBuilding s) pairs
+  move s rts = map (layout s) pairs
     where lvls = levels $ current s
           pairs = map (\l -> (l, rts)) lvls
 
-  resulta :: [State] -> S.Set (M.Map Int [RTG]) -> Int
-  resulta [] _ = 0
-  resulta (s:ss) v = if done then (moves s) else resulta (ss ++ next) v'
+  -- check if this layout has been seen before
+  notSeenBefore :: S.Set (Int, Building) -> State -> Bool
+  notSeenBefore v s = S.notMember (current s, building s) v
+
+  -- keep generating new states until every RTG is on the top floor
+  resulta :: [State] -> Int -> S.Set (Int, Building) -> Int
+  resulta [] _ _ = 0
+  resulta (s:ss) until v = if done then (moves s) else resulta (ss ++ next) until v'
     where b = building s
           c = current s
-          v' = S.insert b v
-          combs = combinations $ b M.! c
-          next = filter (\m -> S.notMember (building m) v') $ filter validate $ concatMap (move s) combs
-          done = 4 == length (b M.! 4)
+          arrangements = combinations $ b M.! c
+          next = filter (notSeenBefore v) $ filter validate $ concatMap (move s) arrangements
+          done = until == length (b M.! 4)
+          v' = S.union (S.fromList $ map (\s -> (current s, building s)) next) v
