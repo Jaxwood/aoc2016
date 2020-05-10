@@ -1,5 +1,6 @@
 module Day11 (resulta, RTG(..), State(..)) where
  
+  import qualified Data.Sequence as Q
   import qualified Data.Map as M
   import qualified Data.Set as S
   import Data.List
@@ -73,10 +74,10 @@ module Day11 (resulta, RTG(..), State(..)) where
   notSeenBefore v s = S.notMember (current s, building s) v
 
   -- keep generating new states until every RTG is on the top floor
-  resulta :: [State] -> Int -> S.Set (Int, Building) -> Int
-  resulta [] _ _ = 0
-  resulta (s:ss) until v = if done then (moves s) else resulta (ss ++ next) until v'
-    where b = building s
+  resulta :: Q.Seq State -> Int -> S.Set (Int, Building) -> Int
+  resulta ss until v = if done then (moves s) else resulta ((Q.><) (Q.drop 1 ss) (Q.fromList next)) until v'
+    where s = Q.index ss 0
+          b = building s
           c = current s
           arrangements = combinations $ b M.! c
           next = filter (notSeenBefore v) $ filter validate $ concatMap (move s) arrangements

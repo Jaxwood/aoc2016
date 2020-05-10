@@ -24,7 +24,6 @@ module Main (main) where
   import Day20Tests
   import Day21Tests
   import Day22Tests
-  import Day22 (debug)
   import Day23Tests
   import Day24Tests
   import Day25Tests
@@ -56,20 +55,20 @@ module Main (main) where
              day2,
              day3 day3a,
              day4 day4a,
-             -- day5
+             day5,
              day6 day6a,
              day7 day7a day7b,
              day8 day8a,
              day9 day9a,
              day10 day10a,
              day11 day11a,
-             -- day12 day12a,
+             day12 day12a,
              day13,
-             -- day14
+             day14,
              day15,
-             -- day16,
-             -- day17,
-             -- day18,
+             day16,
+             day17,
+             day18,
              day19,
              day20 day20a,
              day21 day21a,
@@ -79,9 +78,6 @@ module Main (main) where
              day25 day25a
             ])
   
-    -- for debugging purposes
-    -- writeFile "output.txt" $ debug day22a
-
     if (errors counts2 + failures counts2 == 0)
       then exitSuccess
       else exitFailure
